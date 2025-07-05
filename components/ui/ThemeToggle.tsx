@@ -5,7 +5,16 @@ import { Sun, Moon } from 'lucide-react'
 import { useTheme } from '@/contexts/ThemeContext'
 
 export default function ThemeToggle() {
-  const { theme, toggleTheme } = useTheme()
+  const { theme, toggleTheme, mounted } = useTheme()
+
+  // Prevent hydration mismatch
+  if (!mounted) {
+    return (
+      <div className="p-2 rounded-lg bg-gray-100 dark:bg-gray-800 w-9 h-9 flex items-center justify-center">
+        <div className="w-5 h-5 bg-gray-400 rounded animate-pulse" />
+      </div>
+    )
+  }
 
   return (
     <motion.button
@@ -13,7 +22,7 @@ export default function ThemeToggle() {
       whileTap={{ scale: 0.95 }}
       onClick={toggleTheme}
       className="p-2 rounded-lg bg-gray-100 dark:bg-gray-800 hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors duration-200"
-      aria-label="Toggle theme"
+      aria-label={`Switch to ${theme === 'light' ? 'dark' : 'light'} mode`}
     >
       <motion.div
         initial={false}

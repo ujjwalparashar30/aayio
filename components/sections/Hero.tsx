@@ -13,7 +13,7 @@ export default function Hero() {
       name: "2024 US Election",
       designation: "Political Market",
       content: (
-        <div className="space-y-4 bg-gray-50 dark:bg-gray-900 p-4 rounded-lg border border-gray-200 dark:border-gray-700">
+        <div className="space-y-4 bg-gray-50 dark:bg-gray-900 p-4 rounded-lg border border-gray-200 dark:border-gray-700 transition-colors duration-300">
           <div className="flex justify-between items-center">
             <span className="text-black dark:text-white font-bold">YES: $0.67</span>
             <span className="text-gray-600 dark:text-gray-400 font-bold">NO: $0.33</span>
@@ -30,7 +30,7 @@ export default function Hero() {
       name: "Bitcoin $100k",
       designation: "Crypto Market",
       content: (
-        <div className="space-y-4 bg-gray-50 dark:bg-gray-900 p-4 rounded-lg border border-gray-200 dark:border-gray-700">
+        <div className="space-y-4 bg-gray-50 dark:bg-gray-900 p-4 rounded-lg border border-gray-200 dark:border-gray-700 transition-colors duration-300">
           <div className="flex justify-between items-center">
             <span className="text-black dark:text-white font-bold">YES: $0.42</span>
             <span className="text-gray-600 dark:text-gray-400 font-bold">NO: $0.58</span>
@@ -47,7 +47,7 @@ export default function Hero() {
       name: "AI Breakthrough",
       designation: "Tech Market",
       content: (
-        <div className="space-y-4 bg-gray-50 dark:bg-gray-900 p-4 rounded-lg border border-gray-200 dark:border-gray-700">
+        <div className="space-y-4 bg-gray-50 dark:bg-gray-900 p-4 rounded-lg border border-gray-200 dark:border-gray-700 transition-colors duration-300">
           <div className="flex justify-between items-center">
             <span className="text-black dark:text-white font-bold">YES: $0.78</span>
             <span className="text-gray-600 dark:text-gray-400 font-bold">NO: $0.22</span>
@@ -74,7 +74,7 @@ export default function Hero() {
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8 }}
-            className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl xl:text-8xl font-bold text-center mb-6 text-black dark:text-white leading-tight"
+            className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl xl:text-8xl font-bold text-center mb-6 text-black dark:text-white leading-tight transition-colors duration-300"
           >
             Predict. Trade.{" "}
             <Highlight className="text-gray-600 dark:text-gray-300">
@@ -87,7 +87,7 @@ export default function Hero() {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8, delay: 0.2 }}
-          className="text-lg sm:text-xl md:text-2xl text-gray-600 dark:text-gray-300 mb-8 sm:mb-12 max-w-3xl mx-auto text-center leading-relaxed"
+          className="text-lg sm:text-xl md:text-2xl text-gray-600 dark:text-gray-300 mb-8 sm:mb-12 max-w-3xl mx-auto text-center leading-relaxed transition-colors duration-300"
         >
           Professional prediction markets powered by automated market makers. 
           Trade on real-world events with instant liquidity and fair pricing.

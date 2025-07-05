@@ -9,30 +9,21 @@ export default function Dashboard() {
 
   if (!isLoaded) {
     return (
-      <div className="min-h-screen bg-black flex items-center justify-center">
-        <div className="text-white">Loading...</div>
+      <div className="min-h-screen bg-white dark:bg-black flex items-center justify-center transition-colors duration-300">
+        <div className="text-black dark:text-white">Loading...</div>
       </div>
     )
   }
 
   return (
-    <div className="min-h-screen bg-black">
+    <div className="min-h-screen bg-white dark:bg-black transition-colors duration-300">
       {/* Header */}
-      <header className="border-b border-gray-800 bg-black/90 backdrop-blur-md">
+      <header className="border-b border-gray-200 dark:border-gray-800 bg-white/90 dark:bg-black/90 backdrop-blur-md transition-colors duration-300">
         <div className="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between">
-          <h1 className="text-2xl font-bold text-white">Dashboard</h1>
+          <h1 className="text-2xl font-bold text-black dark:text-white transition-colors duration-300">Dashboard</h1>
           <div className="flex items-center gap-4">
-            <span className="text-gray-300">Welcome, {user?.firstName}!</span>
-            <UserButton 
-              appearance={{
-                elements: {
-                  avatarBox: {
-                    width: '40px',
-                    height: '40px',
-                  },
-                },
-              }}
-            />
+            <span className="text-gray-600 dark:text-gray-300 transition-colors duration-300">Welcome, {user?.firstName}!</span>
+            <UserButton />
           </div>
         </div>
       </header>
@@ -57,14 +48,14 @@ export default function Dashboard() {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.6, delay: index * 0.1 }}
-              className="bg-gray-900 border border-gray-800 rounded-lg p-6"
+              className="bg-gray-50 dark:bg-gray-900 border border-gray-200 dark:border-gray-800 rounded-lg p-6 transition-colors duration-300"
             >
               <div className="flex items-center justify-between mb-4">
-                <stat.icon className="w-8 h-8 text-white" />
-                <span className="text-sm text-green-400">{stat.change}</span>
+                <stat.icon className="w-8 h-8 text-black dark:text-white transition-colors duration-300" />
+                <span className="text-sm text-green-600 dark:text-green-400 transition-colors duration-300">{stat.change}</span>
               </div>
-              <h3 className="text-2xl font-bold text-white mb-1">{stat.value}</h3>
-              <p className="text-gray-400 text-sm">{stat.title}</p>
+              <h3 className="text-2xl font-bold text-black dark:text-white mb-1 transition-colors duration-300">{stat.value}</h3>
+              <p className="text-gray-600 dark:text-gray-400 text-sm transition-colors duration-300">{stat.title}</p>
             </motion.div>
           ))}
         </motion.div>
@@ -74,21 +65,21 @@ export default function Dashboard() {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6, delay: 0.4 }}
-          className="bg-gray-900 border border-gray-800 rounded-lg p-6"
+          className="bg-gray-50 dark:bg-gray-900 border border-gray-200 dark:border-gray-800 rounded-lg p-6 transition-colors duration-300"
         >
-          <h2 className="text-xl font-bold text-white mb-4">Recent Activity</h2>
+          <h2 className="text-xl font-bold text-black dark:text-white mb-4 transition-colors duration-300">Recent Activity</h2>
           <div className="space-y-4">
             {[
               { action: 'Bought', market: 'Bitcoin $100k by 2024', amount: '$500', time: '2 hours ago' },
               { action: 'Sold', market: '2024 US Election', amount: '$250', time: '1 day ago' },
               { action: 'Bought', market: 'AI Breakthrough', amount: '$750', time: '2 days ago' },
             ].map((activity, index) => (
-              <div key={index} className="flex items-center justify-between py-3 border-b border-gray-800 last:border-b-0">
+              <div key={index} className="flex items-center justify-between py-3 border-b border-gray-200 dark:border-gray-800 last:border-b-0 transition-colors duration-300">
                 <div>
-                  <p className="text-white font-medium">{activity.action} - {activity.market}</p>
-                  <p className="text-gray-400 text-sm">{activity.time}</p>
+                  <p className="text-black dark:text-white font-medium transition-colors duration-300">{activity.action} - {activity.market}</p>
+                  <p className="text-gray-600 dark:text-gray-400 text-sm transition-colors duration-300">{activity.time}</p>
                 </div>
-                <span className="text-white font-bold">{activity.amount}</span>
+                <span className="text-black dark:text-white font-bold transition-colors duration-300">{activity.amount}</span>
               </div>
             ))}
           </div>

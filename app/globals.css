@@ -1,10 +1,6 @@
 @import "tailwindcss";
-/* @import "tailwindcss/base";
-@import "tailwindcss/components";
-@import "tailwindcss/utilities"; */
 
 @theme {
-  /* Custom colors */
   --color-elegant-black: #0A0A0A;
   --color-elegant-dark: #1A1A1A;
   --color-elegant-surface: #2A2A2A;
@@ -12,16 +8,60 @@
   --color-elegant-text: #E5E5E5;
   --color-elegant-muted: #9CA3AF;
   --color-elegant-accent: #F8F9FA;
-  
-  /* Custom spacing if needed */
-  --spacing-18: 4.5rem;
-  --spacing-88: 22rem;
-  
-  /* Custom fonts */
-  --font-display: "Inter", "system-ui", "sans-serif";
 }
 
-/* Custom utilities */
+/* Light mode Clerk variables */
+:root {
+  --clerk-card-bg: #ffffff;
+  --clerk-border-color: #e5e7eb;
+  --clerk-text-primary: #000000;
+  --clerk-text-secondary: #6b7280;
+  --clerk-button-bg: #000000;
+  --clerk-button-text: #ffffff;
+  --clerk-button-hover: #1f2937;
+  --clerk-input-bg: #f8f9fa;
+  --clerk-social-bg: #f8f9fa;
+  --clerk-social-hover: #f3f4f6;
+  --clerk-link-color: #000000;
+  --clerk-link-hover: #374151;
+  --clerk-focus-border: #000000;
+}
+
+/* Dark mode Clerk variables */
+html.dark {
+  --clerk-card-bg: #1a1a1a;
+  --clerk-border-color: #374151;
+  --clerk-text-primary: #ffffff;
+  --clerk-text-secondary: #9ca3af;
+  --clerk-button-bg: #ffffff;
+  --clerk-button-text: #000000;
+  --clerk-button-hover: #f3f4f6;
+  --clerk-input-bg: #2a2a2a;
+  --clerk-social-bg: #2a2a2a;
+  --clerk-social-hover: #374151;
+  --clerk-link-color: #ffffff;
+  --clerk-link-hover: #e5e7eb;
+  --clerk-focus-border: #ffffff;
+}
+
+/* Ensure dark mode works properly */
+html.dark {
+  color-scheme: dark;
+}
+
+html.light {
+  color-scheme: light;
+}
+
+/* Prevent flash of unstyled content */
+html {
+  background-color: #ffffff;
+}
+
+html.dark {
+  background-color: #000000;
+}
+
 @layer utilities {
   .hover-elegant {
     transition: all 0.2s ease;
@@ -31,17 +71,4 @@
     background-color: var(--color-elegant-surface);
     border-color: var(--color-elegant-border);
   }
-}
-
-html {
-  scroll-behavior: smooth;
-}
-
-body {
-  transition: background-color 0.3s ease, color 0.3s ease;
-}
-
-.dark {
-  background-color: var(--color-elegant-dark);
-  color: var(--color-elegant-text);
 }
