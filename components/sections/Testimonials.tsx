@@ -1,9 +1,7 @@
 'use client'
 
 import { motion } from 'framer-motion'
-import { SignInButton } from '@clerk/nextjs'
 import { InfiniteMovingCards } from '@/components/ui/infinite-moving-cards'
-import { BackgroundGradient } from '@/components/ui/background-gradient'
 
 const testimonials = [
   {
@@ -43,7 +41,7 @@ export default function Testimonials() {
           transition={{ duration: 0.8 }}
           className="text-center mb-16"
         >
-          <h2 className="text-4xl md:text-5xl font-bold mb-6 bg-gradient-to-r from-blue-400 to-purple-600 bg-clip-text text-transparent">
+          <h2 className="text-4xl md:text-5xl font-bold mb-6 text-white">
             Join the Future of Trading
           </h2>
           <p className="text-xl text-gray-300 max-w-3xl mx-auto mb-12">
@@ -72,14 +70,12 @@ export default function Testimonials() {
             { number: "10K+", label: "Active Traders" },
             { number: "99.9%", label: "Uptime Guarantee" }
           ].map((stat, index) => (
-            <BackgroundGradient key={index} className="rounded-lg p-[2px]">
-              <div className="bg-black rounded-lg p-8 text-center">
-                <div className="text-3xl md:text-4xl font-bold text-blue-400 mb-2">
-                  {stat.number}
-                </div>
-                <div className="text-gray-300">{stat.label}</div>
+            <div key={index} className="bg-gray-900 rounded-lg p-8 text-center border border-gray-800">
+              <div className="text-3xl md:text-4xl font-bold text-white mb-2">
+                {stat.number}
               </div>
-            </BackgroundGradient>
+              <div className="text-gray-300">{stat.label}</div>
+            </div>
           ))}
         </motion.div>
         
@@ -89,17 +85,13 @@ export default function Testimonials() {
           transition={{ duration: 0.8 }}
           className="text-center"
         >
-          {/* <SignInButton mode="modal"> */}
-            <BackgroundGradient className="rounded-lg p-[2px] bg-gradient-to-r from-blue-500 to-purple-600">
-              <motion.button
-                whileHover={{ scale: 1.05 }}
-                whileTap={{ scale: 0.95 }}
-                className="px-8 py-4 bg-black rounded-lg font-semibold text-lg hover:bg-gray-900 transition-colors"
-              >
-                Get Early Access
-              </motion.button>
-            </BackgroundGradient>
-          {/* </SignInButton> */}
+          <motion.button
+            whileHover={{ scale: 1.02 }}
+            whileTap={{ scale: 0.98 }}
+            className="px-8 py-4 bg-white text-black rounded-lg font-semibold text-lg hover:bg-gray-200 transition-colors"
+          >
+            Get Early Access
+          </motion.button>
         </motion.div>
       </div>
     </section>

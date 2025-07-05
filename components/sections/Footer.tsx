@@ -1,6 +1,5 @@
 'use client'
 
-import { WavyBackground } from '@/components/ui/wavy-background'
 import Logo from '../icons/Logo'
 
 const footerLinks = [
@@ -13,33 +12,31 @@ const footerLinks = [
 
 export default function Footer() {
   return (
-    <footer className="relative">
-      <WavyBackground className="max-w-full mx-auto pb-40" backgroundFill="black">
-        <div className="max-w-7xl mx-auto px-6 py-12">
-          <div className="flex flex-col md:flex-row justify-between items-center">
-            <div className="flex items-center gap-2 mb-4 md:mb-0">
-              <Logo />
-              <span className="text-2xl font-bold bg-gradient-to-r from-blue-400 to-purple-600 bg-clip-text text-transparent">
-                PredictMarket
-              </span>
-            </div>
-            <div className="flex space-x-8 text-gray-400">
-              {footerLinks.map((link) => (
-                <a 
-                  key={link.label}
-                  href={link.href} 
-                  className="hover:text-white transition-colors relative z-10"
-                >
-                  {link.label}
-                </a>
-              ))}
-            </div>
+    <footer className="relative bg-black border-t border-gray-800">
+      <div className="max-w-7xl mx-auto px-6 py-12">
+        <div className="flex flex-col md:flex-row justify-between items-center">
+          <div className="flex items-center gap-2 mb-4 md:mb-0">
+            <Logo />
+            <span className="text-2xl font-bold text-white">
+              PredictMarket
+            </span>
           </div>
-          <div className="mt-8 pt-8 border-t border-gray-800 text-center text-gray-400 relative z-10">
-            © 2025 PredictMarket. All rights reserved.
+          <div className="flex space-x-8 text-gray-400">
+            {footerLinks.map((link) => (
+              <a 
+                key={link.label}
+                href={link.href} 
+                className="hover:text-white transition-colors"
+              >
+                {link.label}
+              </a>
+            ))}
           </div>
         </div>
-      </WavyBackground>
+        <div className="mt-8 pt-8 border-t border-gray-800 text-center text-gray-400">
+          © 2025 PredictMarket. All rights reserved.
+        </div>
+      </div>
     </footer>
   )
 }
