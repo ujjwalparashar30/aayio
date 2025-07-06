@@ -2,7 +2,7 @@
 
 import { motion, AnimatePresence } from 'framer-motion'
 import { Menu, X } from 'lucide-react'
-import { useAuth, UserButton } from '@clerk/nextjs'
+import { useAuth, useUser, UserButton } from '@clerk/nextjs'
 import Link from 'next/link'
 import Logo from '../icons/Logo'
 import ThemeToggle from '@/components/ui/ThemeToggle'
@@ -12,6 +12,7 @@ export default function Navigation() {
   const [isMenuOpen, setIsMenuOpen] = useState(false)
   const [scrolled, setScrolled] = useState(false)
   const { isSignedIn, isLoaded } = useAuth()
+  const { user } = useUser()
   
   const navItems = [
     { title: "Features", href: "#features" },
@@ -34,6 +35,9 @@ export default function Navigation() {
     document.addEventListener('click', handleClickOutside)
     return () => document.removeEventListener('click', handleClickOutside)
   }, [isMenuOpen])
+
+  // Get user's first name for display
+  const userFirstName = user?.firstName || user?.username || 'User'
 
   return (
     <>
@@ -83,7 +87,7 @@ export default function Navigation() {
               <ThemeToggle />
               {isLoaded && (
                 <>
-                  {isSignedIn ? (
+                  {isSignedIn && user ? (
                     <div className="flex items-center gap-3">
                       <Link href="/dashboard">
                         <motion.button
@@ -94,6 +98,10 @@ export default function Navigation() {
                           Dashboard
                         </motion.button>
                       </Link>
+                      {/* Show welcome message with user's name */}
+                      <span className="text-sm text-gray-600 dark:text-gray-400 hidden xl:block">
+                        Welcome, {userFirstName}
+                      </span>
                       <UserButton />
                     </div>
                   ) : (
@@ -215,8 +223,11 @@ export default function Navigation() {
                       transition={{ delay: 0.3 }}
                       className="mt-12 pt-8 border-t border-gray-200 dark:border-gray-800"
                     >
-                      {isSignedIn ? (
+                      {isSignedIn && user ? (
                         <div className="space-y-4">
+                          <div className="text-sm text-gray-600 dark:text-gray-400 mb-4">
+                            Welcome, {userFirstName}!
+                          </div>
                           <Link href="/dashboard" onClick={() => setIsMenuOpen(false)}>
                             <button className="w-full text-left text-lg font-medium text-gray-600 dark:text-gray-300 hover:text-black dark:hover:text-white transition-colors duration-200">
                               Dashboard
@@ -224,7 +235,14 @@ export default function Navigation() {
                           </Link>
                           <div className="flex items-center gap-3 pt-4">
                             <UserButton />
-                            <span className="text-sm text-gray-500 dark:text-gray-400">Account</span>
+                            <div className="flex flex-col">
+                              <span className="text-sm text-gray-500 dark:text-gray-400">Account</span>
+                              {user.emailAddresses?.[0]?.emailAddress && (
+                                <span className="text-xs text-gray-400 dark:text-gray-500">
+                                  {user.emailAddresses[0].emailAddress}
+                                </span>
+                              )}
+                            </div>
                           </div>
                         </div>
                       ) : (

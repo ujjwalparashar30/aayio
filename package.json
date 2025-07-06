@@ -10,6 +10,7 @@
   },
   "dependencies": {
     "@clerk/nextjs": "^6.23.3",
+    "@reduxjs/toolkit": "^2.8.2",
     "@tabler/icons-react": "^3.34.0",
     "@tailwindcss/cli": "^4.1.11",
     "@tsparticles/engine": "^3.8.1",
@@ -17,13 +18,17 @@
     "@tsparticles/slim": "^3.8.1",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
+    "dotenv": "^17.0.1",
     "lucide-react": "^0.525.0",
     "mini-svg-data-uri": "^1.4.4",
     "motion": "^12.23.0",
     "next": "15.3.5",
+    "next-themes": "^0.4.6",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
+    "react-redux": "^9.2.0",
     "simplex-noise": "^4.0.3",
+    "sonner": "^2.0.6",
     "tailwind-merge": "^3.3.1"
   },
   "devDependencies": {

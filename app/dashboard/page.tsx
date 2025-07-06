@@ -1,19 +1,48 @@
 'use client'
 
-import { useUser, UserButton } from '@clerk/nextjs'
+import { UserButton } from '@clerk/nextjs'
 import { motion } from 'framer-motion'
 import { TrendingUp, DollarSign, Users, BarChart3 } from 'lucide-react'
+import { useAuthenticatedApi } from '@/state/api'
+import { useEffect, useState } from 'react'
 
 export default function Dashboard() {
-  const { user, isLoaded } = useUser()
+  const { useGetAuthUser } = useAuthenticatedApi()
+  const [getAuthUser, { data: authData, isLoading, error }] = useGetAuthUser()
+  const [userInfo, setUserInfo] = useState<any>(null)
 
-  if (!isLoaded) {
+  useEffect(() => {
+    const fetchUserData = async () => {
+      try {
+        const result = await getAuthUser()
+        if (result?.data) {
+          setUserInfo(result.data)
+        }
+      } catch (err) {
+        console.error('Failed to fetch user data:', err)
+      }
+    }
+
+    fetchUserData()
+  }, [getAuthUser])
+
+  if (isLoading) {
     return (
       <div className="min-h-screen bg-white dark:bg-black flex items-center justify-center transition-colors duration-300">
         <div className="text-black dark:text-white">Loading...</div>
       </div>
     )
   }
+
+  if (error) {
+    return (
+      <div className="min-h-screen bg-white dark:bg-black flex items-center justify-center transition-colors duration-300">
+        <div className="text-red-600 dark:text-red-400">Failed to load dashboard</div>
+      </div>
+    )
+  }
+
+  const firstName = userInfo?.clerkInfo?.firstName || userInfo?.userInfo?.firstName || 'User'
 
   return (
     <div className="min-h-screen bg-white dark:bg-black transition-colors duration-300">
@@ -22,7 +51,9 @@ export default function Dashboard() {
         <div className="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between">
           <h1 className="text-2xl font-bold text-black dark:text-white transition-colors duration-300">Dashboard</h1>
           <div className="flex items-center gap-4">
-            <span className="text-gray-600 dark:text-gray-300 transition-colors duration-300">Welcome, {user?.firstName}!</span>
+            <span className="text-gray-600 dark:text-gray-300 transition-colors duration-300">
+              Welcome, {firstName}!
+            </span>
             <UserButton />
           </div>
         </div>
@@ -30,6 +61,43 @@ export default function Dashboard() {
 
       {/* Main Content */}
       <main className="max-w-7xl mx-auto px-6 py-8">
+        {/* User Info Display */}
+        {userInfo && (
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6 }}
+            className="bg-gray-50 dark:bg-gray-900 border border-gray-200 dark:border-gray-800 rounded-lg p-6 mb-8 transition-colors duration-300"
+          >
+            <h2 className="text-lg font-semibold text-black dark:text-white mb-2 transition-colors duration-300">
+              Account Status
+            </h2>
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4 text-sm">
+              <div>
+                <span className="text-gray-600 dark:text-gray-400">Role: </span>
+                <span className="text-black dark:text-white font-medium">
+                  {userInfo.userInfo?.role || 'User'}
+                </span>
+              </div>
+              <div>
+                <span className="text-gray-600 dark:text-gray-400">Onboarded: </span>
+                <span className="text-black dark:text-white font-medium">
+                  {userInfo.userInfo?.isOnboarded ? 'Yes' : 'No'}
+                </span>
+              </div>
+              <div>
+                <span className="text-gray-600 dark:text-gray-400">Member Since: </span>
+                <span className="text-black dark:text-white font-medium">
+                  {userInfo.userInfo?.createdAt 
+                    ? new Date(userInfo.userInfo.createdAt).toLocaleDateString()
+                    : 'N/A'
+                  }
+                </span>
+              </div>
+            </div>
+          </motion.div>
+        )}
+
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
