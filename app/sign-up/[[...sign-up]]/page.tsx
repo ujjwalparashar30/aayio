@@ -6,6 +6,9 @@ import Link from 'next/link'
 import Logo from '@/components/icons/Logo'
 
 export default function SignUpPage() {
+
+  // Sync user to database after successful signup
+  
   return (
     <div className="min-h-screen bg-white dark:bg-black flex items-center justify-center px-4 transition-colors duration-300">
       {/* Background Pattern */}
@@ -28,6 +31,35 @@ export default function SignUpPage() {
           <h1 className="text-3xl font-bold text-black dark:text-white mb-2 transition-colors duration-300">Create Account</h1>
           <p className="text-gray-600 dark:text-gray-400 transition-colors duration-300">Join thousands of traders making predictions</p>
         </motion.div>
+
+        {/* Loading State */}
+        {
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            className="text-center mb-4"
+          >
+            <div className="inline-flex items-center gap-2 text-gray-600 dark:text-gray-400">
+              <div className="w-4 h-4 border-2 border-gray-300 border-t-gray-600 rounded-full animate-spin"></div>
+              Setting up your account...
+            </div>
+          </motion.div>
+        }
+
+        {/* Error State */}
+        {(
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            className="text-center mb-4"
+          >
+            <div className="bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg p-3">
+              <p className="text-red-600 dark:text-red-400 text-sm">
+                Failed to set up your account. Please try again.
+              </p>
+            </div>
+          </motion.div>
+        )}
 
         {/* Sign Up Component */}
         <motion.div
