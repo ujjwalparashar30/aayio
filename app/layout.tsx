@@ -3,7 +3,7 @@ import { ClerkProvider } from '@clerk/nextjs'
 import { Inter } from 'next/font/google'
 import { ThemeProvider } from '@/contexts/ThemeContext'
 import { store } from './../lib/store'
-import { Provider } from 'react-redux'
+import  {ReduxProvider}  from '../lib/providers'
 import './globals.css'
 
 const inter = Inter({ subsets: ['latin'] })
@@ -21,7 +21,7 @@ export default function RootLayout({
   return (
     <html lang="en" suppressHydrationWarning>
       <body className={`${inter.className} transition-colors duration-300`}>
-        <Provider store={store}>
+        <ReduxProvider>
           <ThemeProvider>
             {/* ClerkProvider wraps the entire application to provide authentication context */}
           <ClerkProvider>
@@ -30,7 +30,7 @@ export default function RootLayout({
               </div>
           </ClerkProvider>
           </ThemeProvider>
-       </Provider>
+        </ReduxProvider>
       </body>
     </html>
   )

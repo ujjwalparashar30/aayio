@@ -4,58 +4,8 @@ import { SignIn } from '@clerk/nextjs'
 import { motion } from 'framer-motion'
 import Link from 'next/link'
 import Logo from '@/components/icons/Logo'
-import { useUser, useAuth } from '@clerk/nextjs'
-import { useEffect } from 'react'
-import { useAuthenticatedApi } from '@/state/api'
-import { useRouter } from 'next/navigation'
 
 export default function SignInPage() {
-  const { user, isLoaded } = useUser()
-  const { isSignedIn } = useAuth()
-  const router = useRouter()
-  const { useSyncUser, useCheckOnboardingStatus } = useAuthenticatedApi()
-  const [syncUser, { isLoading: isSyncing }] = useSyncUser()
-  const [checkOnboarding, { data: onboardingData }] = useCheckOnboardingStatus()
-
-  // Handle post-signin logic
-  useEffect(() => {
-    const handlePostSignIn = async () => {
-      if (isLoaded && isSignedIn && user) {
-        try {
-          // First, sync user data
-          const primaryEmail = user.emailAddresses.find(
-            (email) => email.id === user.primaryEmailAddressId
-          )?.emailAddress
-
-          if (primaryEmail) {
-            await syncUser({
-              clerkId: user.id,
-              email: primaryEmail,
-              firstName: user.firstName || undefined,
-              lastName: user.lastName || undefined,
-              imageUrl: user.imageUrl || undefined,
-            })
-
-            // Check onboarding status
-            const onboardingResult = await checkOnboarding()
-            
-            if (onboardingResult?.data?.isOnboarded) {
-              router.push('/dashboard')
-            } else {
-              router.push('/onboarding')
-            }
-          }
-        } catch (error) {
-          console.error('Post-signin error:', error)
-          // Still redirect to dashboard on error
-          router.push('/dashboard')
-        }
-      }
-    }
-
-    handlePostSignIn()
-  }, [isLoaded, isSignedIn, user, syncUser, checkOnboarding, router])
-
   return (
     <div className="min-h-screen bg-white dark:bg-black flex items-center justify-center px-4 transition-colors duration-300">
       {/* Background Pattern */}
@@ -80,7 +30,7 @@ export default function SignInPage() {
         </motion.div>
 
         {/* Loading State */}
-        {isSyncing && (
+        { (
           <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}

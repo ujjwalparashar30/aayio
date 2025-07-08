@@ -3,44 +3,10 @@
 import { UserButton } from '@clerk/nextjs'
 import { motion } from 'framer-motion'
 import { TrendingUp, DollarSign, Users, BarChart3 } from 'lucide-react'
-import { useAuthenticatedApi } from '@/state/api'
 import { useEffect, useState } from 'react'
 
 export default function Dashboard() {
-  const { useGetAuthUser } = useAuthenticatedApi()
-  const [getAuthUser, { data: authData, isLoading, error }] = useGetAuthUser()
   const [userInfo, setUserInfo] = useState<any>(null)
-
-  useEffect(() => {
-    const fetchUserData = async () => {
-      try {
-        const result = await getAuthUser()
-        if (result?.data) {
-          setUserInfo(result.data)
-        }
-      } catch (err) {
-        console.error('Failed to fetch user data:', err)
-      }
-    }
-
-    fetchUserData()
-  }, [getAuthUser])
-
-  if (isLoading) {
-    return (
-      <div className="min-h-screen bg-white dark:bg-black flex items-center justify-center transition-colors duration-300">
-        <div className="text-black dark:text-white">Loading...</div>
-      </div>
-    )
-  }
-
-  if (error) {
-    return (
-      <div className="min-h-screen bg-white dark:bg-black flex items-center justify-center transition-colors duration-300">
-        <div className="text-red-600 dark:text-red-400">Failed to load dashboard</div>
-      </div>
-    )
-  }
 
   const firstName = userInfo?.clerkInfo?.firstName || userInfo?.userInfo?.firstName || 'User'
 
