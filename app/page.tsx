@@ -1,3 +1,4 @@
+// app/page.tsx
 import Navigation from '@/components/sections/Navigation'
 import Hero from '@/components/sections/Hero'
 import Features from '@/components/sections/Features'
@@ -8,7 +9,7 @@ import Footer from '@/components/sections/Footer'
 
 export default function Home() {
   return (
-    <div className="min-h-screen bg-black text-white overflow-hidden">
+    <div className="min-h-screen overflow-hidden">
       <Navigation />
       <Hero />
       <Features />

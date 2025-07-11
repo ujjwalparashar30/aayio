@@ -1,3 +1,4 @@
+// components/sections/Navigation.tsx
 'use client'
 
 import { motion, AnimatePresence } from 'framer-motion'
@@ -29,14 +30,15 @@ export default function Navigation() {
   }, [])
 
   useEffect(() => {
-    const handleClickOutside = () => {
-      if (isMenuOpen) setIsMenuOpen(false)
+    const handleClickOutside = (event: MouseEvent) => {
+      if (isMenuOpen) {
+        setIsMenuOpen(false)
+      }
     }
     document.addEventListener('click', handleClickOutside)
     return () => document.removeEventListener('click', handleClickOutside)
   }, [isMenuOpen])
 
-  // Get user's first name for display
   const userFirstName = user?.firstName || user?.username || 'User'
 
   return (
@@ -47,42 +49,30 @@ export default function Navigation() {
         transition={{ duration: 0.3 }}
         className={`fixed top-0 w-full z-50 transition-all duration-300 ${
           scrolled 
-            ? 'bg-white/95 dark:bg-black/95 backdrop-blur-lg border-b border-gray-200 dark:border-gray-800' 
+            ? 'bg-white/80 dark:bg-gray-900/80 backdrop-blur-lg border-b border-gray-200 dark:border-gray-700' 
             : 'bg-transparent'
         }`}
       >
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex items-center justify-between h-16 sm:h-20">
             
-            {/* Logo */}
-            <motion.div
-              whileHover={{ scale: 1.02 }}
-              className="flex items-center gap-2 z-50"
-            >
-              <Link href="/" className="flex items-center gap-2">
-                <Logo />
-                <span className="text-xl font-semibold text-black dark:text-white tracking-tight">
-                  PredictMarket
-                </span>
-              </Link>
-            </motion.div>
+            <Link href="/" className="flex items-center gap-2 z-50">
+              <Logo />
+              <span className="text-xl font-semibold text-gray-800 dark:text-white tracking-tight">
+                PredictMarket
+              </span>
+            </Link>
 
-            {/* Desktop Navigation */}
             <div className="hidden lg:flex items-center space-x-1">
               {navItems.map((item) => (
                 <Link key={item.title} href={item.href}>
-                  <motion.button
-                    whileHover={{ scale: 1.05 }}
-                    whileTap={{ scale: 0.95 }}
-                    className="px-4 py-2 text-sm font-medium text-gray-600 dark:text-gray-300 hover:text-black dark:hover:text-white transition-colors duration-200 rounded-md"
-                  >
+                  <button className="px-4 py-2 text-sm font-medium text-gray-600 dark:text-gray-300 hover:text-black dark:hover:text-white transition-colors duration-200 rounded-md">
                     {item.title}
-                  </motion.button>
+                  </button>
                 </Link>
               ))}
             </div>
 
-            {/* Desktop Auth Section */}
             <div className="hidden lg:flex items-center gap-3">
               <ThemeToggle />
               {isLoaded && (
@@ -90,15 +80,10 @@ export default function Navigation() {
                   {isSignedIn && user ? (
                     <div className="flex items-center gap-3">
                       <Link href="/dashboard">
-                        <motion.button
-                          whileHover={{ scale: 1.02 }}
-                          whileTap={{ scale: 0.98 }}
-                          className="px-4 py-2 text-sm font-medium text-gray-600 dark:text-gray-300 hover:text-black dark:hover:text-white transition-colors duration-200"
-                        >
+                        <button className="px-4 py-2 text-sm font-medium text-gray-600 dark:text-gray-300 hover:text-black dark:hover:text-white transition-colors duration-200">
                           Dashboard
-                        </motion.button>
+                        </button>
                       </Link>
-                      {/* Show welcome message with user's name */}
                       <span className="text-sm text-gray-600 dark:text-gray-400 hidden xl:block">
                         Welcome, {userFirstName}
                       </span>
@@ -107,22 +92,14 @@ export default function Navigation() {
                   ) : (
                     <div className="flex items-center gap-2">
                       <Link href="/sign-in">
-                        <motion.button
-                          whileHover={{ scale: 1.02 }}
-                          whileTap={{ scale: 0.98 }}
-                          className="px-4 py-2 text-sm font-medium text-gray-600 dark:text-gray-300 hover:text-black dark:hover:text-white transition-colors duration-200"
-                        >
+                        <button className="px-4 py-2 text-sm font-medium text-gray-600 dark:text-gray-300 hover:text-black dark:hover:text-white transition-colors duration-200">
                           Sign In
-                        </motion.button>
+                        </button>
                       </Link>
                       <Link href="/sign-up">
-                        <motion.button
-                          whileHover={{ scale: 1.02 }}
-                          whileTap={{ scale: 0.98 }}
-                          className="px-4 py-2 text-sm font-medium bg-black dark:bg-white text-white dark:text-black rounded-md hover:bg-gray-800 dark:hover:bg-gray-200 transition-colors duration-200"
-                        >
+                        <button className="px-4 py-2 text-sm font-medium bg-gray-800 dark:bg-white text-white dark:text-black rounded-md hover:bg-gray-700 dark:hover:bg-gray-200 transition-colors duration-200">
                           Get Started
-                        </motion.button>
+                        </button>
                       </Link>
                     </div>
                   )}
@@ -130,11 +107,9 @@ export default function Navigation() {
               )}
             </div>
 
-            {/* Mobile Menu Button */}
             <div className="lg:hidden flex items-center gap-2">
               <ThemeToggle />
-              <motion.button
-                whileTap={{ scale: 0.95 }}
+              <button
                 onClick={(e) => {
                   e.stopPropagation()
                   setIsMenuOpen(!isMenuOpen)
@@ -164,13 +139,12 @@ export default function Navigation() {
                     </motion.div>
                   )}
                 </AnimatePresence>
-              </motion.button>
+              </button>
             </div>
           </div>
         </div>
       </motion.nav>
 
-      {/* Mobile Menu Overlay */}
       <AnimatePresence>
         {isMenuOpen && (
           <>
@@ -188,41 +162,30 @@ export default function Navigation() {
               animate={{ x: 0 }}
               exit={{ x: '100%' }}
               transition={{ type: 'tween', duration: 0.3 }}
-              className="fixed top-0 right-0 h-full w-80 max-w-[85vw] bg-white/95 dark:bg-black/95 backdrop-blur-lg border-l border-gray-200 dark:border-gray-800 z-50 lg:hidden"
+              className="fixed top-0 right-0 h-full w-80 max-w-[85vw] bg-white/95 dark:bg-gray-900/95 backdrop-blur-lg border-l border-gray-200 dark:border-gray-800 z-50 lg:hidden"
               onClick={(e) => e.stopPropagation()}
             >
               <div className="flex flex-col h-full">
                 <div className="flex items-center justify-between p-6 border-b border-gray-200 dark:border-gray-800">
-                  <span className="text-lg font-semibold text-black dark:text-white">Menu</span>
+                  <span className="text-lg font-semibold text-gray-800 dark:text-white">Menu</span>
                 </div>
 
                 <div className="flex-1 px-6 py-8">
                   <div className="space-y-6">
-                    {navItems.map((item, index) => (
-                      <motion.div
+                    {navItems.map((item) => (
+                      <Link
                         key={item.title}
-                        initial={{ opacity: 0, x: 20 }}
-                        animate={{ opacity: 1, x: 0 }}
-                        transition={{ delay: index * 0.1 }}
+                        href={item.href}
+                        onClick={() => setIsMenuOpen(false)}
+                        className="block text-lg font-medium text-gray-600 dark:text-gray-300 hover:text-black dark:hover:text-white transition-colors duration-200"
                       >
-                        <Link
-                          href={item.href}
-                          onClick={() => setIsMenuOpen(false)}
-                          className="block text-lg font-medium text-gray-600 dark:text-gray-300 hover:text-black dark:hover:text-white transition-colors duration-200"
-                        >
-                          {item.title}
-                        </Link>
-                      </motion.div>
+                        {item.title}
+                      </Link>
                     ))}
                   </div>
 
                   {isLoaded && (
-                    <motion.div
-                      initial={{ opacity: 0, y: 20 }}
-                      animate={{ opacity: 1, y: 0 }}
-                      transition={{ delay: 0.3 }}
-                      className="mt-12 pt-8 border-t border-gray-200 dark:border-gray-800"
-                    >
+                    <div className="mt-12 pt-8 border-t border-gray-200 dark:border-gray-800">
                       {isSignedIn && user ? (
                         <div className="space-y-4">
                           <div className="text-sm text-gray-600 dark:text-gray-400 mb-4">
@@ -253,13 +216,13 @@ export default function Navigation() {
                             </button>
                           </Link>
                           <Link href="/sign-up" onClick={() => setIsMenuOpen(false)}>
-                            <button className="w-full px-4 py-3 text-sm font-medium bg-black dark:bg-white text-white dark:text-black rounded-md hover:bg-gray-800 dark:hover:bg-gray-200 transition-colors duration-200 text-center">
+                            <button className="w-full px-4 py-3 text-sm font-medium bg-gray-800 dark:bg-white text-white dark:text-black rounded-md hover:bg-gray-700 dark:hover:bg-gray-200 transition-colors duration-200 text-center">
                               Get Started
                             </button>
                           </Link>
                         </div>
                       )}
-                    </motion.div>
+                    </div>
                   )}
                 </div>
               </div>
