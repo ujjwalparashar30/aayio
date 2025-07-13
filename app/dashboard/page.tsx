@@ -1,9 +1,9 @@
 'use client'
 
-import Navigation from '@/components/sections/Navigation'
+// import Navigation from '@/components/sections/Navigation'
 import Footer from '@/components/sections/Footer'
 import { motion } from 'framer-motion'
-import { TrendingUp, DollarSign, BarChart3, Trophy, Settings, Bell, User, ChevronDown, Eye, Calendar, Target, Wallet } from 'lucide-react'
+import { TrendingUp, Trophy, Settings, Bell, User, ChevronDown, Eye, Calendar, Target, Wallet } from 'lucide-react'
 import { useState } from 'react'
 import ThemeToggle from '@/components/ui/ThemeToggle'
 
@@ -202,7 +202,7 @@ export default function Dashboard() {
             <div className="lg:col-span-2 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg p-6">
               <h4 className="font-semibold text-gray-800 dark:text-white mb-4">Winnings Over Time</h4>
               <div className="h-64 flex items-end justify-between gap-2">
-                {winningsData.map((data, index) => (
+                {winningsData.map((data) => (
                   <div key={data.month} className="flex-1 flex flex-col items-center">
                     <div
                       className="w-full bg-gradient-to-t from-blue-500 to-purple-600 rounded-t-md transition-all duration-500 hover:from-blue-600 hover:to-purple-700"

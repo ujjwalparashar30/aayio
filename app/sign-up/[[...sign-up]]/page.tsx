@@ -18,8 +18,11 @@ export default function SignUpPage() {
       setIsLoading(false)
     }
 
-    const handleClerkError = (error: any) => {
-      setError(error?.message || 'Something went wrong. Please try again.')
+    const handleClerkError = (error: Error | unknown) => {
+      const errorMessage = error && typeof error === 'object' && 'message' in error 
+        ? (error as { message: string }).message 
+        : 'Something went wrong. Please try again.'
+      setError(errorMessage)
       setIsLoading(false)
     }
 

@@ -33,4 +33,8 @@ export const api = createApi({
   }),
 });
 
-export const { useCreateUserMutation, useUpdateUserMutation, useDeleteUserMutation } = api;
+export const {
+  useCreateUserMutation,
+  useUpdateUserMutation,
+  useDeleteUserMutation,
+} = api;

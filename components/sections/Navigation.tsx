@@ -30,7 +30,9 @@ export default function Navigation() {
   }, [])
 
   useEffect(() => {
-    const handleClickOutside = (event: MouseEvent) => {
+    const handleClickOutside = (
+      // event: MouseEvent
+    ) => {
       if (isMenuOpen) {
         setIsMenuOpen(false)
       }

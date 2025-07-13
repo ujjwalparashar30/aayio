@@ -109,7 +109,7 @@ export default function SignInPage() {
           className="text-center mt-8"
         >
           <p className="text-gray-600 dark:text-gray-400 text-sm transition-colors duration-300">
-            Don't have an account?{' '}
+            Do not have an account?{' '}
             <Link href="/sign-up" className="text-black dark:text-white hover:text-gray-700 dark:hover:text-gray-300 transition-colors duration-200">
               Sign up here
             </Link>

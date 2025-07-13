@@ -6,7 +6,7 @@ export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
 }
 
-export function cleanParams(params: Record<string, any>): Record<string, any> {
+export function cleanParams(params: Record<string, unknown>): Record<string, unknown> {
   return Object.fromEntries(
     Object.entries(params).filter(
       (
@@ -41,11 +41,40 @@ export const withToast = async <T>(
   }
 };
 
+// Define proper types for the function parameters
+interface User {
+  userId: string;
+  username: string;
+}
+
+interface IdToken {
+  payload?: {
+    email?: string;
+  };
+}
+
+interface FetchWithBQOptions {
+  url: string;
+  method: string;
+  body: {
+    cognitoId: string;
+    username: string;
+    email: string;
+  };
+}
+
+interface FetchWithBQResponse {
+  error?: boolean;
+  [key: string]: unknown;
+}
+
+type FetchWithBQFunction = (options: FetchWithBQOptions) => Promise<FetchWithBQResponse>;
+
 export const createNewUserInDatabase = async (
-  user: any,
-  idToken: any,
+  user: User,
+  idToken: IdToken,
   userRole: string,
-  fetchWithBQ: any
+  fetchWithBQ: FetchWithBQFunction
 ) => {
   // Map user roles to their respective creation endpoints
   const roleToEndpointMap: Record<string, string> = {
