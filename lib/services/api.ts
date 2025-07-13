@@ -204,4 +204,11 @@ export const {
   useCreateUserMutation,
   useUpdateUserMutation,
   useDeleteUserMutation,
+
+
+  // added my sanchit
+  useGetQuestionsQuery,
+  useGetQuestionByIdQuery,
+  useGetQuestionPriceHistoryQuery,
+  useGetQuestionOrderBookQuery
 } = api;
