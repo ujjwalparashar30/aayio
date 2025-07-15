@@ -6,6 +6,8 @@ import { HeroHighlight, Highlight } from '@/components/ui/hero-highlight'
 import { CardStack } from '@/components/ui/card-stack'
 import Link from 'next/link'
 
+
+
 export default function Hero() {
   const marketCards = [
     {

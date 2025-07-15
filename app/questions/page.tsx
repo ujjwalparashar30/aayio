@@ -1,9 +1,16 @@
-import React from 'react'
+// app/questions/page.tsx
+'use client';
 
-const page = () => {
+import Navigation from '@/components/sections/Navigation';
+import Questions from '@/components/sections/Questions';
+
+export default function QuestionsPage() {
   return (
-    <div>page</div>
-  )
+    <>
+      <Navigation />
+      <main className="min-h-screen bg-white dark:bg-black pt-20 pb-12">
+        <Questions />
+      </main>
+    </>
+  );
 }
-
-export default page

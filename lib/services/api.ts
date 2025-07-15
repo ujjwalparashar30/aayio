@@ -1,7 +1,7 @@
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 
 
-interface Question {
+export interface Question {
   id: string;
   title: string;
   description: string | null;
@@ -35,6 +35,24 @@ interface Question {
     yesTokenHoldings: number;
     noTokenHoldings: number;
   };
+    noTokenHoldings: Array<{
+    quantity: number;
+    averageBuyPrice: number;
+    user: {
+      id: string;
+      firstName: string | null;
+      lastName: string | null;
+    };
+  }>;
+    yesTokenHoldings: Array<{
+    quantity: number;
+    averageBuyPrice: number;
+    user: {
+      id: string;
+      firstName: string | null;
+      lastName: string | null;
+    };
+  }>;
 }
 
 interface PaginationData {
@@ -175,7 +193,7 @@ export const api = createApi({
     }),
 
     getQuestionById: builder.query<GetQuestionByIdResponse, string>({
-      query: (id) => `/${id}`,
+      query: (id) => `/question/${id}`,
       providesTags: (result, error, id) => [{ type: 'Question', id }],
       keepUnusedDataFor: 300,
     }),
@@ -187,13 +205,13 @@ export const api = createApi({
     }>({
       query: ({ id, timeframe = '7d', interval = '1h' }) => {
         const params = new URLSearchParams({ timeframe, interval });
-        return `/${id}/price-history?${params.toString()}`;
+        return `/question/${id}/price-history?${params.toString()}`;
       },
       providesTags: (result, error, { id }) => [{ type: 'PriceHistory', id }],
       keepUnusedDataFor: 60,
     }),
     getQuestionOrderBook: builder.query<GetOrderBookResponse, string>({
-      query: (id) => `/${id}/order-book`,
+      query: (id) => `/question/${id}/order-book`,
       providesTags: (result, error, id) => [{ type: 'OrderBook', id }],
       keepUnusedDataFor: 30,
     }),

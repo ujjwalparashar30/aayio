@@ -1,4 +1,3 @@
-// components/sections/Navigation.tsx
 'use client'
 
 import { motion, AnimatePresence } from 'framer-motion'
@@ -14,28 +13,24 @@ export default function Navigation() {
   const [scrolled, setScrolled] = useState(false)
   const { isSignedIn, isLoaded } = useAuth()
   const { user } = useUser()
-  
+
+  // Updated with Questions route
   const navItems = [
-    { title: "Features", href: "#features" },
-    { title: "How It Works", href: "#how-it-works" },
-    { title: "Why Us", href: "#comparison" },
+    { title: "Features", href: "/#features" },
+    { title: "How It Works", href: "/#how-it-works" },
+    { title: "Why Us", href: "/#comparison" },
+    { title: "Questions", href: "/questions" }, // <-- Added line
   ]
 
   useEffect(() => {
-    const handleScroll = () => {
-      setScrolled(window.scrollY > 20)
-    }
+    const handleScroll = () => setScrolled(window.scrollY > 20)
     window.addEventListener('scroll', handleScroll)
     return () => window.removeEventListener('scroll', handleScroll)
   }, [])
 
   useEffect(() => {
-    const handleClickOutside = (
-      // event: MouseEvent
-    ) => {
-      if (isMenuOpen) {
-        setIsMenuOpen(false)
-      }
+    const handleClickOutside = () => {
+      if (isMenuOpen) setIsMenuOpen(false)
     }
     document.addEventListener('click', handleClickOutside)
     return () => document.removeEventListener('click', handleClickOutside)
@@ -57,7 +52,6 @@ export default function Navigation() {
       >
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex items-center justify-between h-16 sm:h-20">
-            
             <Link href="/" className="flex items-center gap-2 z-50">
               <Logo />
               <span className="text-xl font-semibold text-gray-800 dark:text-white tracking-tight">
@@ -158,7 +152,7 @@ export default function Navigation() {
               className="fixed inset-0 bg-black/20 dark:bg-black/60 backdrop-blur-sm z-40 lg:hidden"
               onClick={() => setIsMenuOpen(false)}
             />
-            
+
             <motion.div
               initial={{ x: '100%' }}
               animate={{ x: 0 }}
