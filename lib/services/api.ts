@@ -1,5 +1,6 @@
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 
+// ====================== INTERFACES ======================
 
 export interface Question {
   id: string;
@@ -35,7 +36,7 @@ export interface Question {
     yesTokenHoldings: number;
     noTokenHoldings: number;
   };
-    noTokenHoldings: Array<{
+  noTokenHoldings: Array<{
     quantity: number;
     averageBuyPrice: number;
     user: {
@@ -44,7 +45,7 @@ export interface Question {
       lastName: string | null;
     };
   }>;
-    yesTokenHoldings: Array<{
+  yesTokenHoldings: Array<{
     quantity: number;
     averageBuyPrice: number;
     user: {
@@ -64,6 +65,7 @@ interface PaginationData {
   hasPrev: boolean;
 }
 
+// Question Interfaces
 interface GetQuestionsResponse {
   success: boolean;
   data: {
@@ -116,6 +118,119 @@ interface GetPriceHistoryResponse {
   };
 }
 
+// Trading Interfaces
+interface BuyTokenRequest {
+  userId: string;
+  questionId: string;
+  tokenType: 'YES' | 'NO';
+  quantity: number;
+}
+
+interface BuyTokenResponse {
+  success: boolean;
+  data: {
+    transaction: any;
+    newPrice: number;
+    totalCost: number;
+    platformFee: number;
+    totalAmount: number;
+  };
+}
+
+interface PreviewTradeRequest {
+  questionId: string;
+  tokenType: 'YES' | 'NO';
+  quantity: number;
+}
+
+interface PreviewTradeResponse {
+  success: boolean;
+  data: {
+    questionId: string;
+    tokenType: string;
+    quantity: number;
+    action: string;
+    pricePerToken: number;
+    totalAmount: number;
+    platformFee: number;
+    totalCost: number;
+    availableSupply: number;
+  };
+}
+
+interface GetTokenPricesResponse {
+  success: boolean;
+  data: {
+    questionId: string;
+    yesPrice: number;
+    noPrice: number;
+    yesAvailableSupply: number;
+    noAvailableSupply: number;
+    lastUpdated: string;
+  };
+}
+
+interface GetMarketStatsResponse {
+  success: boolean;
+  data: {
+    questionId: string;
+    totalYesTokens: number;
+    totalNoTokens: number;
+    yesHolders: number;
+    noHolders: number;
+    totalVolume: number;
+    collectedFees: number;
+    yesPrice: number;
+    noPrice: number;
+    yesAvailableSupply: number;
+    noAvailableSupply: number;
+  };
+}
+
+interface GetUserPortfolioResponse {
+  success: boolean;
+  data: {
+    userId: string;
+    yesHoldings: any[];
+    noHoldings: any[];
+  };
+}
+
+interface GetTradeHistoryResponse {
+  success: boolean;
+  data: {
+    userId: string;
+    transactions: any[];
+    pagination: PaginationData;
+  };
+}
+
+// P2P Interfaces
+interface CreateP2POrderRequest {
+  userId: string;
+  questionId: string;
+  orderType: 'BUY' | 'SELL';
+  tokenType: 'YES' | 'NO';
+  quantity: number;
+  pricePerToken: number;
+  expiresAt?: string;
+}
+
+interface CreateP2POrderResponse {
+  success: boolean;
+  data: any;
+}
+
+interface MatchOrderRequest {
+  buyerUserId: string;
+  quantity: number;
+}
+
+interface MatchOrderResponse {
+  success: boolean;
+  data: any;
+}
+
 interface OrderData {
   id: string;
   userId: string;
@@ -143,49 +258,247 @@ interface GetOrderBookResponse {
   data: OrderBook;
 }
 
+interface GetUserOrdersResponse {
+  success: boolean;
+  data: {
+    userId: string;
+    orders: any[];
+    pagination: PaginationData;
+  };
+}
+
+interface GetOrderDetailsResponse {
+  success: boolean;
+  data: any;
+}
+
+// Wallet Interfaces
+interface GetBalanceResponse {
+  success: boolean;
+  data: {
+    user: {
+      id: string;
+      name: string;
+    };
+    balances: {
+      available: number;
+      locked: number;
+      p2pEscrow: number;
+      total: number;
+    };
+    lifetime: {
+      totalAdded: number;
+      totalSpent: number;
+      netGain: number;
+    };
+  };
+}
+
+interface AddPlayMoneyRequest {
+  userId: string;
+  amount: number;
+  description?: string;
+}
+
+interface AddPlayMoneyResponse {
+  success: boolean;
+  data: {
+    user: {
+      id: string;
+      newBalance: number;
+      totalAdded: number;
+    };
+    transaction: any;
+    message: string;
+  };
+}
+
+interface TransferMoneyRequest {
+  fromUserId: string;
+  toUserId: string;
+  amount: number;
+  description?: string;
+}
+
+interface TransferMoneyResponse {
+  success: boolean;
+  data: {
+    transfer: any;
+    transactions: any;
+    message: string;
+  };
+}
+
+interface GetTransactionHistoryResponse {
+  success: boolean;
+  data: {
+    userId: string;
+    transactions: any[];
+    summary: {
+      totalTransactions: number;
+      totalDeposits: number;
+      totalWithdrawals: number;
+    };
+    pagination: PaginationData;
+  };
+}
+
+// Admin Interfaces
+interface CreateQuestionRequest {
+  adminId: string;
+  title: string;
+  description?: string;
+  category?: string;
+  imageUrl?: string;
+  resolutionDate: string;
+  initialTokenSupply?: number;
+  initialTokenPrice?: number;
+  platformFeeRate?: number;
+}
+
+interface CreateQuestionResponse {
+  success: boolean;
+  data: {
+    question: any;
+    yesToken: any;
+    noToken: any;
+    summary: any;
+  };
+}
+
+interface ResolveQuestionRequest {
+  adminId: string;
+  resolvedAnswer: boolean;
+}
+
+interface ResolveQuestionResponse {
+  success: boolean;
+  data: {
+    question: any;
+    marketResolution: any;
+    payouts: any[];
+    summary: any;
+  };
+}
+
+interface GetDashboardStatsResponse {
+  success: boolean;
+  data: {
+    overview: {
+      totalQuestions: number;
+      activeQuestions: number;
+      resolvedQuestions: number;
+      totalUsers: number;
+      totalTransactions: number;
+      totalVolume: number;
+      totalFeesCollected: number;
+    };
+    recentQuestions: any[];
+    topQuestions: any[];
+  };
+}
+
+interface GetAllQuestionsAdminResponse {
+  success: boolean;
+  data: {
+    questions: any[];
+    pagination: PaginationData;
+  };
+}
+
+interface UpdateQuestionRequest {
+  title?: string;
+  description?: string;
+  category?: string;
+  imageUrl?: string;
+  resolutionDate?: string;
+  status?: string;
+}
+
+interface UpdateQuestionResponse {
+  success: boolean;
+  data: any;
+}
+
+interface GetQuestionStatsResponse {
+  success: boolean;
+  data: {
+    question: any;
+    analytics: {
+      totalHolders: number;
+      totalVolume: number;
+      feesCollected: number;
+      yesHolders: number;
+      noHolders: number;
+      yesTokensCirculating: number;
+      noTokensCirculating: number;
+    };
+  };
+}
+
+interface GetPlatformRevenueResponse {
+  success: boolean;
+  data: {
+    totalRevenue: number;
+    revenueByTimeframe: any[];
+    revenueByCategory: any[];
+  };
+}
+
+// ====================== API SLICE ======================
+
 export const api = createApi({
   reducerPath: "api",
   baseQuery: fetchBaseQuery({
     baseUrl: process.env.NEXT_PUBLIC_API_URL || "http://localhost:3001/api",
   }),
   refetchOnFocus: true,
-  tagTypes: ['Question', 'OrderBook', 'PriceHistory'],
+  tagTypes: [
+    'Question', 
+    'OrderBook', 
+    'PriceHistory', 
+    'User', 
+    'Balance', 
+    'Transaction', 
+    'Order', 
+    'Admin'
+  ],
   endpoints: (builder) => ({
+    // ====================== AUTH ENDPOINTS ======================
     createUser: builder.mutation({
       query: (newUser) => ({
         url: "users/create",
         method: "POST",
         body: newUser,
       }),
+      invalidatesTags: ['User'],
     }),
-    // Mutation to update a user (user.updated event)
     updateUser: builder.mutation({
       query: (updatedUser) => ({
         url: "users/update",
         method: "PUT",
         body: updatedUser,
       }),
+      invalidatesTags: ['User'],
     }),
-    // Mutation to delete a user (user.deleted event)
     deleteUser: builder.mutation({
       query: (userToDelete) => ({
         url: "users/delete",
         method: "DELETE",
         body: userToDelete,
       }),
+      invalidatesTags: ['User'],
     }),
 
+    // ====================== QUESTION ENDPOINTS ======================
     getQuestions: builder.query<GetQuestionsResponse, GetQuestionsParams>({
       query: (params = {}) => {
         const searchParams = new URLSearchParams();
-        
-        // Add all parameters to search params
         Object.entries(params).forEach(([key, value]) => {
           if (value !== undefined && value !== null && value !== '') {
             searchParams.append(key, value.toString());
           }
         });
-
         return `/question?${searchParams.toString()}`;
       },
       providesTags: ['Question'],
@@ -210,23 +523,260 @@ export const api = createApi({
       providesTags: (result, error, { id }) => [{ type: 'PriceHistory', id }],
       keepUnusedDataFor: 60,
     }),
+
     getQuestionOrderBook: builder.query<GetOrderBookResponse, string>({
       query: (id) => `/question/${id}/order-book`,
       providesTags: (result, error, id) => [{ type: 'OrderBook', id }],
       keepUnusedDataFor: 30,
     }),
+
+    // ====================== TRADING ENDPOINTS ======================
+    buyTokenFromPlatform: builder.mutation<BuyTokenResponse, BuyTokenRequest>({
+      query: (body) => ({
+        url: '/trading/buy',
+        method: 'POST',
+        body,
+      }),
+      invalidatesTags: ['Question', 'Balance', 'User'],
+    }),
+
+    previewTrade: builder.mutation<PreviewTradeResponse, PreviewTradeRequest>({
+      query: (body) => ({
+        url: '/trading/preview',
+        method: 'POST',
+        body,
+      }),
+    }),
+
+    getTokenPrices: builder.query<GetTokenPricesResponse, string>({
+      query: (questionId) => `/trading/price/${questionId}`,
+      providesTags: (result, error, questionId) => [{ type: 'Question', id: questionId }],
+      keepUnusedDataFor: 60,
+    }),
+
+    getMarketStats: builder.query<GetMarketStatsResponse, string>({
+      query: (questionId) => `/trading/stats/${questionId}`,
+      providesTags: (result, error, questionId) => [{ type: 'Question', id: questionId }],
+      keepUnusedDataFor: 120,
+    }),
+
+    getUserPortfolio: builder.query<GetUserPortfolioResponse, string>({
+      query: (userId) => `/trading/portfolio/${userId}`,
+      providesTags: (result, error, userId) => [{ type: 'User', id: userId }],
+      keepUnusedDataFor: 180,
+    }),
+
+    getTradeHistory: builder.query<GetTradeHistoryResponse, { userId: string; page?: number; limit?: number }>({
+      query: ({ userId, page = 1, limit = 20 }) => {
+        const params = new URLSearchParams({ page: page.toString(), limit: limit.toString() });
+        return `/trading/history/${userId}?${params.toString()}`;
+      },
+      providesTags: (result, error, { userId }) => [{ type: 'Transaction', id: userId }],
+      keepUnusedDataFor: 300,
+    }),
+
+    // ====================== P2P ENDPOINTS ======================
+    createP2POrder: builder.mutation<CreateP2POrderResponse, CreateP2POrderRequest>({
+      query: (body) => ({
+        url: '/p2p/create-order',
+        method: 'POST',
+        body,
+      }),
+      invalidatesTags: ['OrderBook', 'User', 'Balance'],
+    }),
+
+    matchOrder: builder.mutation<MatchOrderResponse, { orderId: string; body: MatchOrderRequest }>({
+      query: ({ orderId, body }) => ({
+        url: `/p2p/match/${orderId}`,
+        method: 'POST',
+        body,
+      }),
+      invalidatesTags: ['OrderBook', 'User', 'Balance', 'Transaction'],
+    }),
+
+    cancelOrder: builder.mutation<{ success: boolean; data: any }, string>({
+      query: (orderId) => ({
+        url: `/p2p/cancel/${orderId}`,
+        method: 'POST',
+      }),
+      invalidatesTags: ['OrderBook', 'User', 'Balance'],
+    }),
+
+    getP2POrderBook: builder.query<GetOrderBookResponse, string>({
+      query: (questionId) => `/p2p/orders/${questionId}`,
+      providesTags: (result, error, questionId) => [{ type: 'OrderBook', id: questionId }],
+      keepUnusedDataFor: 30,
+    }),
+
+    getUserOrders: builder.query<GetUserOrdersResponse, { userId: string; status?: string; page?: number; limit?: number }>({
+      query: ({ userId, status, page = 1, limit = 20 }) => {
+        const params = new URLSearchParams({ page: page.toString(), limit: limit.toString() });
+        if (status) params.append('status', status);
+        return `/p2p/my-orders/${userId}?${params.toString()}`;
+      },
+      providesTags: (result, error, { userId }) => [{ type: 'Order', id: userId }],
+      keepUnusedDataFor: 120,
+    }),
+
+    getOrderDetails: builder.query<GetOrderDetailsResponse, string>({
+      query: (orderId) => `/p2p/order/${orderId}`,
+      providesTags: (result, error, orderId) => [{ type: 'Order', id: orderId }],
+      keepUnusedDataFor: 300,
+    }),
+
+    // ====================== WALLET ENDPOINTS ======================
+    getBalance: builder.query<GetBalanceResponse, string>({
+      query: (userId) => `/wallet/balance/${userId}`,
+      providesTags: (result, error, userId) => [{ type: 'Balance', id: userId }],
+      keepUnusedDataFor: 120,
+    }),
+
+    addPlayMoney: builder.mutation<AddPlayMoneyResponse, AddPlayMoneyRequest>({
+      query: (body) => ({
+        url: '/wallet/add-money',
+        method: 'POST',
+        body,
+      }),
+      invalidatesTags: ['Balance', 'Transaction'],
+    }),
+
+    transferMoney: builder.mutation<TransferMoneyResponse, TransferMoneyRequest>({
+      query: (body) => ({
+        url: '/wallet/transfer',
+        method: 'POST',
+        body,
+      }),
+      invalidatesTags: ['Balance', 'Transaction'],
+    }),
+
+    getTransactionHistory: builder.query<GetTransactionHistoryResponse, { userId: string; page?: number; limit?: number; type?: string }>({
+      query: ({ userId, page = 1, limit = 20, type }) => {
+        const params = new URLSearchParams({ page: page.toString(), limit: limit.toString() });
+        if (type) params.append('type', type);
+        return `/wallet/transactions/${userId}?${params.toString()}`;
+      },
+      providesTags: (result, error, { userId }) => [{ type: 'Transaction', id: userId }],
+      keepUnusedDataFor: 300,
+    }),
+
+    // ====================== ADMIN ENDPOINTS ======================
+    createQuestion: builder.mutation<CreateQuestionResponse, CreateQuestionRequest>({
+      query: (body) => ({
+        url: '/admin/create-question',
+        method: 'POST',
+        body,
+      }),
+      invalidatesTags: ['Question', 'Admin'],
+    }),
+
+    resolveQuestion: builder.mutation<ResolveQuestionResponse, { questionId: string; body: ResolveQuestionRequest }>({
+      query: ({ questionId, body }) => ({
+        url: `/admin/resolve-question/${questionId}`,
+        method: 'POST',
+        body,
+      }),
+      invalidatesTags: ['Question', 'Balance', 'Transaction', 'Admin'],
+    }),
+
+    getDashboardStats: builder.query<GetDashboardStatsResponse, void>({
+      query: () => '/admin/dashboard',
+      providesTags: ['Admin'],
+      keepUnusedDataFor: 300,
+    }),
+
+    getAllQuestionsAdmin: builder.query<GetAllQuestionsAdminResponse, { 
+      status?: string; 
+      category?: string; 
+      page?: number; 
+      limit?: number; 
+      sortBy?: string; 
+      sortOrder?: 'asc' | 'desc' 
+    }>({
+      query: (params = {}) => {
+        const searchParams = new URLSearchParams();
+        Object.entries(params).forEach(([key, value]) => {
+          if (value !== undefined && value !== null && value !== '') {
+            searchParams.append(key, value.toString());
+          }
+        });
+        return `/admin/questions?${searchParams.toString()}`;
+      },
+      providesTags: ['Admin', 'Question'],
+      keepUnusedDataFor: 300,
+    }),
+
+    updateQuestion: builder.mutation<UpdateQuestionResponse, { questionId: string; body: UpdateQuestionRequest }>({
+      query: ({ questionId, body }) => ({
+        url: `/admin/update-question/${questionId}`,
+        method: 'PUT',
+        body,
+      }),
+      invalidatesTags: ['Question', 'Admin'],
+    }),
+
+    getQuestionStats: builder.query<GetQuestionStatsResponse, string>({
+      query: (questionId) => `/admin/question-stats/${questionId}`,
+      providesTags: (result, error, questionId) => [{ type: 'Admin', id: questionId }],
+      keepUnusedDataFor: 300,
+    }),
+
+    getPlatformRevenue: builder.query<GetPlatformRevenueResponse, { startDate?: string; endDate?: string }>({
+      query: (params = {}) => {
+        const searchParams = new URLSearchParams();
+        Object.entries(params).forEach(([key, value]) => {
+          if (value !== undefined && value !== null && value !== '') {
+            searchParams.append(key, value);
+          }
+        });
+        return `/admin/revenue?${searchParams.toString()}`;
+      },
+      providesTags: ['Admin'],
+      keepUnusedDataFor: 600,
+    }),
   }),
 });
 
+// ====================== EXPORT HOOKS ======================
 export const {
+  // Auth hooks
   useCreateUserMutation,
   useUpdateUserMutation,
   useDeleteUserMutation,
 
-
-  // added my sanchit
+  // Question hooks
   useGetQuestionsQuery,
   useGetQuestionByIdQuery,
   useGetQuestionPriceHistoryQuery,
-  useGetQuestionOrderBookQuery
+  useGetQuestionOrderBookQuery,
+
+  // Trading hooks
+  useBuyTokenFromPlatformMutation,
+  usePreviewTradeMutation,
+  useGetTokenPricesQuery,
+  useGetMarketStatsQuery,
+  useGetUserPortfolioQuery,
+  useGetTradeHistoryQuery,
+
+  // P2P hooks
+  useCreateP2POrderMutation,
+  useMatchOrderMutation,
+  useCancelOrderMutation,
+  useGetP2POrderBookQuery,
+  useGetUserOrdersQuery,
+  useGetOrderDetailsQuery,
+
+  // Wallet hooks
+  useGetBalanceQuery,
+  useAddPlayMoneyMutation,
+  useTransferMoneyMutation,
+  useGetTransactionHistoryQuery,
+
+  // Admin hooks
+  useCreateQuestionMutation,
+  useResolveQuestionMutation,
+  useGetDashboardStatsQuery,
+  useGetAllQuestionsAdminQuery,
+  useUpdateQuestionMutation,
+  useGetQuestionStatsQuery,
+  useGetPlatformRevenueQuery,
 } = api;

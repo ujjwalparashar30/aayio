@@ -1,10 +1,9 @@
 'use client'
 
 import React, { useState } from 'react'
-import { useUser } from '@clerk/nextjs'
-import { useRouter } from 'next/navigation'
-import Navigation from '@/components/layout/Navigation'
 import { motion } from 'framer-motion'
+import { useRouter } from 'next/navigation'
+import { useUser } from '@clerk/nextjs'
 import { 
   useGetQuestionsQuery, 
   useGetBalanceQuery,
@@ -26,46 +25,19 @@ import {
   Eye,
   BarChart3,
   Plus,
-  Activity,
-  Gamepad2
+  Activity
 } from 'lucide-react'
 import Link from 'next/link'
 
-const DashboardPage = () => {
-  // const { user, isLoaded } = useUser()
-  // const router = useRouter()
+const DashboardContent = () => {
+  const router = useRouter()
+  const { user } = useUser()
   const [activeTab, setActiveTab] = useState("markets")
 
-  const { user, isLoaded, isSignedIn } = useUser()
-  const router = useRouter()
-  
-  // 🔍 DEBUG: Keep this for now to see progress
-  console.log('🔍 Clerk State:', { isLoaded, isSignedIn, userId: user?.id })
+  // Get user ID - in production, use Clerk user ID
+  const userId = user?.id || "cmcw9fg1m0000uw42coo6mxzz" // fallback for testing
 
-  // ✅ CRITICAL: Wait for Clerk to load
-  if (!isLoaded) {
-    return (
-      <div className="min-h-screen flex items-center justify-center">
-        <div className="animate-spin rounded-full h-32 w-32 border-b-2 border-blue-500"></div>
-      </div>
-    )
-  }
-
-  // ✅ CRITICAL: Redirect if not signed in
-  if (!isSignedIn || !user) {
-    router.push('/sign-in')
-    return (
-      <div className="min-h-screen flex items-center justify-center">
-        <div>Redirecting to sign in...</div>
-      </div>
-    )
-  }
-
-  // ✅ NOW user.id is guaranteed to exist
-  const userId = user.id
-  console.log('👤 Using userId for API calls:', userId)
-
-  // RTK Query hooks
+  // Fetch live data using RTK Query
   const { 
     data: questionsData, 
     isLoading: questionsLoading, 
@@ -78,7 +50,8 @@ const DashboardPage = () => {
 
   const { 
     data: balanceData, 
-    isLoading: balanceLoading 
+    isLoading: balanceLoading,
+    refetch: refetchBalance
   } = useGetBalanceQuery(userId)
 
   const { 
@@ -95,13 +68,13 @@ const DashboardPage = () => {
     limit: 5 
   })
 
-  // Extract data safely
+  // Extract data with safe fallbacks
   const questions = questionsData?.data?.questions || []
   const balance = balanceData?.data?.balances || { available: 0, locked: 0, total: 0 }
   const portfolio = portfolioData?.data || { yesHoldings: [], noHoldings: [] }
   const recentTrades = tradeHistoryData?.data?.transactions || []
 
-  // Calculate portfolio stats
+  // Calculate portfolio statistics
   const portfolioStats = React.useMemo(() => {
     const yesHoldings = portfolio.yesHoldings || []
     const noHoldings = portfolio.noHoldings || []
@@ -120,33 +93,22 @@ const DashboardPage = () => {
     }
   }, [portfolio])
 
-  if (!isLoaded || !user) {
-    return (
-      <div className="min-h-screen flex items-center justify-center">
-        <div className="animate-spin rounded-full h-32 w-32 border-b-2 border-blue-500"></div>
-      </div>
-    )
-  }
-
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 to-slate-100 dark:from-slate-900 dark:to-slate-800">
-      <Navigation />
-      
       {/* Welcome Header */}
       <motion.div
         initial={{ opacity: 0, y: -20 }}
         animate={{ opacity: 1, y: 0 }}
-        className="pt-20 pb-8 bg-white/80 dark:bg-slate-900/80 backdrop-blur-md border-b border-slate-200 dark:border-slate-700"
+        className="bg-white/80 dark:bg-slate-900/80 backdrop-blur-md border-b border-slate-200 dark:border-slate-700"
       >
-        <div className="max-w-7xl mx-auto px-6">
+        <div className="max-w-7xl mx-auto px-6 py-8">
           <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-6">
             <div>
-              <h1 className="text-4xl font-bold text-slate-900 dark:text-white mb-2 flex items-center gap-3">
-                <Gamepad2 className="w-10 h-10 text-blue-500" />
-                Welcome back, {user.firstName}! 
+              <h1 className="text-4xl font-bold text-slate-900 dark:text-white mb-2">
+                🎮 Welcome back, {user?.firstName || 'Trader'}!
               </h1>
               <p className="text-slate-600 dark:text-slate-400 text-lg">
-                Ready to make some smart predictions today?
+                Ready to make some smart predictions?
               </p>
             </div>
             
@@ -156,20 +118,20 @@ const DashboardPage = () => {
               animate={{ scale: 1, opacity: 1 }}
               transition={{ delay: 0.2 }}
             >
-              <Card className="bg-gradient-to-r from-emerald-500 to-emerald-600 text-white border-0 shadow-xl min-w-[300px]">
+              <Card className="bg-gradient-to-r from-emerald-500 to-emerald-600 text-white border-0 shadow-xl min-w-[280px]">
                 <CardContent className="p-6">
                   {balanceLoading ? (
                     <div className="flex items-center gap-4">
-                      <Wallet className="w-12 h-12" />
+                      <Wallet className="w-10 h-10" />
                       <div>
-                        <p className="text-emerald-100 font-medium mb-2">Available Balance</p>
-                        <Skeleton className="h-10 w-40 bg-white/20" />
+                        <p className="text-emerald-100 font-medium mb-1">Available Balance</p>
+                        <Skeleton className="h-8 w-32 bg-white/20" />
                       </div>
                     </div>
                   ) : (
                     <div className="flex items-center justify-between">
                       <div className="flex items-center gap-4">
-                        <Wallet className="w-12 h-12" />
+                        <Wallet className="w-10 h-10" />
                         <div>
                           <p className="text-emerald-100 font-medium mb-1">Available Balance</p>
                           <p className="text-3xl font-bold">
@@ -217,7 +179,7 @@ const DashboardPage = () => {
                     </p>
                   )}
                 </div>
-                <BarChart3 className="w-12 h-12 text-blue-500" />
+                <BarChart3 className="w-10 h-10 text-blue-500" />
               </div>
             </CardContent>
           </Card>
@@ -249,7 +211,7 @@ const DashboardPage = () => {
                     </p>
                   )}
                 </div>
-                <TrendingUp className={`w-12 h-12 ${
+                <TrendingUp className={`w-10 h-10 ${
                   portfolioStats.pnl >= 0 ? 'text-emerald-500' : 'text-red-500'
                 }`} />
               </div>
@@ -269,7 +231,7 @@ const DashboardPage = () => {
                     </p>
                   )}
                 </div>
-                <Target className="w-12 h-12 text-purple-500" />
+                <Target className="w-10 h-10 text-purple-500" />
               </div>
             </CardContent>
           </Card>
@@ -287,7 +249,7 @@ const DashboardPage = () => {
                     </p>
                   )}
                 </div>
-                <Activity className="w-12 h-12 text-orange-500" />
+                <Activity className="w-10 h-10 text-orange-500" />
               </div>
             </CardContent>
           </Card>
@@ -300,7 +262,7 @@ const DashboardPage = () => {
           transition={{ delay: 0.4 }}
         >
           <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-6">
-            <TabsList className="grid w-full grid-cols-3">
+            <TabsList className="grid w-full grid-cols-2 lg:grid-cols-3">
               <TabsTrigger value="markets" className="flex items-center gap-2">
                 <BarChart3 className="w-4 h-4" />
                 Hot Markets
@@ -309,7 +271,7 @@ const DashboardPage = () => {
                 <Trophy className="w-4 h-4" />
                 My Portfolio
               </TabsTrigger>
-              <TabsTrigger value="activity" className="flex items-center gap-2">
+              <TabsTrigger value="activity" className="hidden lg:flex items-center gap-2">
                 <Activity className="w-4 h-4" />
                 Recent Activity
               </TabsTrigger>
@@ -321,7 +283,7 @@ const DashboardPage = () => {
                 <h2 className="text-2xl font-bold text-slate-900 dark:text-white">
                   🔥 Trending Markets
                 </h2>
-                <Link href="/markets">
+                <Link href="/questions">
                   <Button variant="outline" className="flex items-center gap-2">
                     View All Markets
                     <ArrowUpRight className="w-4 h-4" />
@@ -347,7 +309,7 @@ const DashboardPage = () => {
                 <Card>
                   <CardContent className="p-8 text-center">
                     <p className="text-red-600 dark:text-red-400 mb-4">
-                      Unable to load markets. Please check your connection.
+                      🚨 Could not load markets. Please check your backend connection.
                     </p>
                     <Button 
                       variant="outline" 
@@ -359,9 +321,9 @@ const DashboardPage = () => {
                 </Card>
               ) : questions.length === 0 ? (
                 <Card>
-                  <CardContent className="p-12 text-center">
-                    <Target className="w-20 h-20 text-slate-400 mx-auto mb-6" />
-                    <h3 className="text-2xl font-bold text-slate-900 dark:text-white mb-4">
+                  <CardContent className="p-8 text-center">
+                    <Target className="w-16 h-16 text-slate-400 mx-auto mb-4" />
+                    <h3 className="text-xl font-semibold text-slate-900 dark:text-white mb-2">
                       No markets available
                     </h3>
                     <p className="text-slate-600 dark:text-slate-400">
@@ -376,13 +338,11 @@ const DashboardPage = () => {
                       key={question.id}
                       initial={{ opacity: 0, scale: 0.95 }}
                       animate={{ opacity: 1, scale: 1 }}
-                      whileHover={{ scale: 1.02, y: -5 }}
+                      whileHover={{ scale: 1.02 }}
                       transition={{ duration: 0.2 }}
                     >
-                      <Card 
-                        className="hover:shadow-xl transition-all duration-300 cursor-pointer group border-0 bg-white/80 dark:bg-slate-800/80 backdrop-blur-sm overflow-hidden"
-                        onClick={() => router.push(`/markets/${question.id}`)}
-                      >
+                      <Card className="hover:shadow-lg transition-all duration-200 cursor-pointer group border-0 bg-white/80 dark:bg-slate-800/80 backdrop-blur-sm"
+                            onClick={() => router.push(`/questions/${question.id}`)}>
                         <CardHeader className="pb-4">
                           <div className="flex items-center gap-2 mb-3">
                             <Badge variant="outline" className="text-xs font-medium">
@@ -396,7 +356,7 @@ const DashboardPage = () => {
                               {question.status}
                             </Badge>
                           </div>
-                          <CardTitle className="text-lg leading-tight group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors line-clamp-2">
+                          <CardTitle className="text-lg leading-tight group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors">
                             {question.title}
                           </CardTitle>
                         </CardHeader>
@@ -408,17 +368,16 @@ const DashboardPage = () => {
                           
                           {/* Price Cards */}
                           <div className="grid grid-cols-2 gap-3">
-                            <div className="bg-gradient-to-r from-green-50 to-green-100 dark:from-green-900/20 dark:to-green-800/20 rounded-lg p-3 text-center border border-green-200 dark:border-green-800">
+                            <div className="bg-green-50 dark:bg-green-900/20 rounded-lg p-3 text-center border border-green-200 dark:border-green-800">
                               <p className="text-green-600 dark:text-green-400 text-xs font-semibold mb-1">YES</p>
                               <p className="text-green-700 dark:text-green-300 font-bold text-lg">
-                              ₹{Number(question?.currentYesPrice ?? question?.yesToken?.currentPrice ?? 1).toFixed(2)}
-
+                                ₹{(question.currentYesPrice || question.yesToken?.currentPrice || 1.0).toFixed(2)}
                               </p>
                             </div>
-                            <div className="bg-gradient-to-r from-red-50 to-red-100 dark:from-red-900/20 dark:to-red-800/20 rounded-lg p-3 text-center border border-red-200 dark:border-red-800">
+                            <div className="bg-red-50 dark:bg-red-900/20 rounded-lg p-3 text-center border border-red-200 dark:border-red-800">
                               <p className="text-red-600 dark:text-red-400 text-xs font-semibold mb-1">NO</p>
                               <p className="text-red-700 dark:text-red-300 font-bold text-lg">
-                                ₹{Number(question.currentNoPrice || question.noToken?.currentPrice || 1.0).toFixed(2)}
+                                ₹{(question.currentNoPrice || question.noToken?.currentPrice || 1.0).toFixed(2)}
                               </p>
                             </div>
                           </div>
@@ -476,7 +435,7 @@ const DashboardPage = () => {
                       You haven't made any trades yet. Browse our active markets and make your first prediction!
                     </p>
                     <div className="flex flex-col sm:flex-row gap-3 justify-center">
-                      <Link href="/markets">
+                      <Link href="/questions">
                         <Button size="lg" className="flex items-center gap-2">
                           <Target className="w-5 h-5" />
                           Browse Markets
@@ -493,11 +452,11 @@ const DashboardPage = () => {
                 </Card>
               ) : (
                 <div className="space-y-6">
-                  {/* Portfolio Summary Cards */}
+                  {/* Portfolio Summary */}
                   <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                     <Card>
                       <CardContent className="p-6 text-center">
-                        <div className="w-12 h-12 bg-blue-100 dark:bg-blue-900 rounded-xl flex items-center justify-center mx-auto mb-4">
+                        <div className="w-12 h-12 bg-blue-100 dark:bg-blue-900 rounded-lg flex items-center justify-center mx-auto mb-4">
                           <BarChart3 className="w-6 h-6 text-blue-600 dark:text-blue-400" />
                         </div>
                         <p className="text-sm text-slate-600 dark:text-slate-400 mb-1">Total Invested</p>
@@ -509,7 +468,7 @@ const DashboardPage = () => {
 
                     <Card>
                       <CardContent className="p-6 text-center">
-                        <div className="w-12 h-12 bg-green-100 dark:bg-green-900 rounded-xl flex items-center justify-center mx-auto mb-4">
+                        <div className="w-12 h-12 bg-green-100 dark:bg-green-900 rounded-lg flex items-center justify-center mx-auto mb-4">
                           <Wallet className="w-6 h-6 text-green-600 dark:text-green-400" />
                         </div>
                         <p className="text-sm text-slate-600 dark:text-slate-400 mb-1">Current Value</p>
@@ -521,7 +480,7 @@ const DashboardPage = () => {
 
                     <Card>
                       <CardContent className="p-6 text-center">
-                        <div className={`w-12 h-12 rounded-xl flex items-center justify-center mx-auto mb-4 ${
+                        <div className={`w-12 h-12 rounded-lg flex items-center justify-center mx-auto mb-4 ${
                           portfolioStats.pnl >= 0 
                             ? 'bg-green-100 dark:bg-green-900' 
                             : 'bg-red-100 dark:bg-red-900'
@@ -544,7 +503,7 @@ const DashboardPage = () => {
                     </Card>
                   </div>
 
-                  {/* Holdings Display */}
+                  {/* Holdings List */}
                   <Card>
                     <CardHeader>
                       <CardTitle className="flex items-center gap-2">
@@ -563,7 +522,7 @@ const DashboardPage = () => {
                             YES Positions
                           </h4>
                           {portfolio.yesHoldings.map((holding: any, index: number) => (
-                            <div key={index} className="flex items-center justify-between p-4 bg-green-50 dark:bg-green-900/10 rounded-xl border border-green-200 dark:border-green-800">
+                            <div key={index} className="flex items-center justify-between p-4 bg-green-50 dark:bg-green-900/10 rounded-lg border border-green-200 dark:border-green-800">
                               <div>
                                 <h5 className="font-medium text-slate-900 dark:text-white">
                                   {holding.question?.title || 'Question'}
@@ -596,7 +555,7 @@ const DashboardPage = () => {
                             NO Positions
                           </h4>
                           {portfolio.noHoldings.map((holding: any, index: number) => (
-                            <div key={index} className="flex items-center justify-between p-4 bg-red-50 dark:bg-red-900/10 rounded-xl border border-red-200 dark:border-red-800">
+                            <div key={index} className="flex items-center justify-between p-4 bg-red-50 dark:bg-red-900/10 rounded-lg border border-red-200 dark:border-red-800">
                               <div>
                                 <h5 className="font-medium text-slate-900 dark:text-white">
                                   {holding.question?.title || 'Question'}
@@ -657,7 +616,7 @@ const DashboardPage = () => {
                     <p className="text-slate-600 dark:text-slate-400 mb-8">
                       Your trading activity and transaction history will appear here
                     </p>
-                    <Link href="/markets">
+                    <Link href="/questions">
                       <Button size="lg" className="flex items-center gap-2">
                         <Target className="w-5 h-5" />
                         Start Trading Now
@@ -718,4 +677,4 @@ const DashboardPage = () => {
   )
 }
 
-export default DashboardPage
+export default DashboardContent
