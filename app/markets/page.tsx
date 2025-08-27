@@ -378,13 +378,13 @@ const MarketsPage = () => {
                           <div className="bg-green-50 dark:bg-green-900/20 rounded-lg p-3 text-center border border-green-200 dark:border-green-800 min-w-[80px]">
                             <p className="text-green-600 dark:text-green-400 text-xs font-semibold mb-1">YES</p>
                             <p className="text-green-700 dark:text-green-300 font-bold">
-                              ₹{(market.currentYesPrice || market.yesToken?.currentPrice || 1.0).toFixed(2)}
+                              ₹{Number(market.currentYesPrice || market.yesToken?.currentPrice || 1.0).toFixed(2)}
                             </p>
                           </div>
                           <div className="bg-red-50 dark:bg-red-900/20 rounded-lg p-3 text-center border border-red-200 dark:border-red-800 min-w-[80px]">
                             <p className="text-red-600 dark:text-red-400 text-xs font-semibold mb-1">NO</p>
                             <p className="text-red-700 dark:text-red-300 font-bold">
-                              ₹{(market.currentNoPrice || market.noToken?.currentPrice || 1.0).toFixed(2)}
+                              ₹{Number(market.currentNoPrice || market.noToken?.currentPrice || 1.0).toFixed(2)}
                             </p>
                           </div>
                         </div>

@@ -42,6 +42,49 @@ const DashboardPage = () => {
   // 🔍 DEBUG: Keep this for now to see progress
   console.log('🔍 Clerk State:', { isLoaded, isSignedIn, userId: user?.id })
 
+    // RTK Query hooks
+  const { 
+      data: questionsData, 
+      isLoading: questionsLoading, 
+      error: questionsError 
+    } = useGetQuestionsQuery({ 
+      page: 1, 
+      limit: 8, 
+      status: 'ACTIVE' 
+    })
+
+    if (!isSignedIn || !user) {
+      router.push('/sign-in')
+      return (
+        <div className="min-h-screen flex items-center justify-center">
+          <div>Redirecting to sign in...</div>
+        </div>
+      )
+    }
+  
+    // ✅ NOW user.id is guaranteed to exist
+    const userId = user?.id 
+    console.log('👤 Using userId for API calls:', userId)
+
+    const { 
+      data: balanceData, 
+      isLoading: balanceLoading 
+    } = useGetBalanceQuery(userId || "hello")
+  
+    const { 
+      data: portfolioData, 
+      isLoading: portfolioLoading 
+    } = useGetUserPortfolioQuery(userId || "hello")
+  
+    const { 
+      data: tradeHistoryData, 
+      isLoading: tradeHistoryLoading 
+    } = useGetTradeHistoryQuery({ 
+      userId: userId || "hello", 
+      page: 1, 
+      limit: 5 
+    })
+
   // ✅ CRITICAL: Wait for Clerk to load
   if (!isLoaded) {
     return (
@@ -52,48 +95,6 @@ const DashboardPage = () => {
   }
 
   // ✅ CRITICAL: Redirect if not signed in
-  if (!isSignedIn || !user) {
-    router.push('/sign-in')
-    return (
-      <div className="min-h-screen flex items-center justify-center">
-        <div>Redirecting to sign in...</div>
-      </div>
-    )
-  }
-
-  // ✅ NOW user.id is guaranteed to exist
-  const userId = user.id
-  console.log('👤 Using userId for API calls:', userId)
-
-  // RTK Query hooks
-  const { 
-    data: questionsData, 
-    isLoading: questionsLoading, 
-    error: questionsError 
-  } = useGetQuestionsQuery({ 
-    page: 1, 
-    limit: 8, 
-    status: 'ACTIVE' 
-  })
-
-  const { 
-    data: balanceData, 
-    isLoading: balanceLoading 
-  } = useGetBalanceQuery(userId)
-
-  const { 
-    data: portfolioData, 
-    isLoading: portfolioLoading 
-  } = useGetUserPortfolioQuery(userId)
-
-  const { 
-    data: tradeHistoryData, 
-    isLoading: tradeHistoryLoading 
-  } = useGetTradeHistoryQuery({ 
-    userId, 
-    page: 1, 
-    limit: 5 
-  })
 
   // Extract data safely
   const questions = questionsData?.data?.questions || []
