@@ -1,4 +1,6 @@
-import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
+import { createApi, FetchArgs, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
+import { getTokenFromClerk } from '@/lib/TokenProvider'
+
 
 // ====================== INTERFACES ======================
 
@@ -445,14 +447,51 @@ interface GetPlatformRevenueResponse {
   };
 }
 
+const rawBaseQuery = fetchBaseQuery({
+  baseUrl: process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001/api',
+  credentials: 'include',
+});
+
+const toHeaders = (h?: HeadersInit): Headers => {
+  const headers = new Headers()
+  if (!h) return headers
+  if (h instanceof Headers) {
+    h.forEach((v, k) => headers.set(k, v))
+  } else if (Array.isArray(h)) {
+    for (const [k, v] of h) headers.set(k, v)
+  } else {
+    for (const k of Object.keys(h)) {
+      const v = (h as Record<string, string | undefined>)[k]
+      if (v !== undefined) headers.set(k, v)
+    }
+  }
+  return headers
+}
+
+const authedBaseQuery: typeof rawBaseQuery = async (args, api, extraOptions) => {
+  const token = await getTokenFromClerk()
+
+  if (typeof args === 'string') {
+    const headers = new Headers()
+    if (token) headers.set('authorization', `Bearer ${token}`)
+    headers.set('content-type', 'application/json')
+    const finalArgs: FetchArgs = { url: args, headers }
+    return rawBaseQuery(finalArgs, api, extraOptions)
+  } else {
+    const headers = toHeaders(args.headers)
+    if (token) headers.set('authorization', `Bearer ${token}`)
+    headers.set('content-type', 'application/json')
+    const finalArgs: FetchArgs = { ...args, headers }
+    return rawBaseQuery(finalArgs, api, extraOptions)
+  }
+}
 // ====================== API SLICE ======================
 
 export const api = createApi({
   reducerPath: "api",
-  baseQuery: fetchBaseQuery({
-    baseUrl: process.env.NEXT_PUBLIC_API_URL || "http://localhost:3001/api",
-  }),
+  baseQuery: authedBaseQuery,
   refetchOnFocus: true,
+  
   tagTypes: [
     'Question', 
     'OrderBook', 
@@ -463,6 +502,7 @@ export const api = createApi({
     'Order', 
     'Admin'
   ],
+  
   endpoints: (builder) => ({
     // ====================== AUTH ENDPOINTS ======================
     createUser: builder.mutation({
