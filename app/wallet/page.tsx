@@ -38,6 +38,8 @@ import {
 
 const WalletPage = () => {
   const { user, isLoaded } = useUser()
+  console.log(user);
+  
   const router = useRouter()
   
   const [addMoneyAmount, setAddMoneyAmount] = useState('')
@@ -53,8 +55,10 @@ const WalletPage = () => {
     }
   }, [isLoaded, user, router])
 
-  const userId = user?.id || "test-user-id"
+  const userId = user?.id || "cmeyovx9e0000k4af1qcjost7"
 
+  console.log(userId);
+  
   // RTK Query hooks
   const { 
     data: balanceData, 

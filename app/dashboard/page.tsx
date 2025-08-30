@@ -1,8 +1,8 @@
 'use client'
 
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { useUser } from '@clerk/nextjs'
-import { useRouter } from 'next/navigation'
+import { useRouter, redirect } from 'next/navigation'
 import Navigation from '@/components/layout/Navigation'
 import { motion } from 'framer-motion'
 import { 
@@ -54,7 +54,7 @@ const DashboardPage = () => {
     })
 
     if (!isSignedIn || !user) {
-      router.push('/sign-in')
+      redirect('/sign-in')
       return (
         <div className="min-h-screen flex items-center justify-center">
           <div>Redirecting to sign in...</div>
@@ -570,7 +570,7 @@ const DashboardPage = () => {
                                   {holding.question?.title || 'Question'}
                                 </h5>
                                 <p className="text-sm text-green-600 dark:text-green-400">
-                                  {holding.quantity} YES tokens @ ₹{holding.averageBuyPrice?.toFixed(2) || '0.00'}
+                                  {holding.quantity} YES tokens @ ₹({Number(holding.averageBuyPrice)?.toFixed(2) || '0.00'})
                                 </p>
                               </div>
                               <div className="text-right">
@@ -603,7 +603,7 @@ const DashboardPage = () => {
                                   {holding.question?.title || 'Question'}
                                 </h5>
                                 <p className="text-sm text-red-600 dark:text-red-400">
-                                  {holding.quantity} NO tokens @ ₹{holding.averageBuyPrice?.toFixed(2) || '0.00'}
+                                  {holding.quantity} NO tokens @ ₹{Number(holding.averageBuyPrice)?.toFixed(2) || '0.00'}
                                 </p>
                               </div>
                               <div className="text-right">
@@ -701,7 +701,7 @@ const DashboardPage = () => {
                                 {transaction.type === 'BUY' ? '-' : '+'}₹{(transaction.totalAmount || 0).toLocaleString()}
                               </p>
                               <p className="text-sm text-slate-600 dark:text-slate-400">
-                                @ ₹{(transaction.pricePerToken || 0).toFixed(2)} per token
+                                @ ₹{Number(transaction.pricePerToken || 0).toFixed(2)} per token
                               </p>
                             </div>
                           </div>
