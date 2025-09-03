@@ -1,4 +1,3 @@
-// app/questions/[id]/page.tsx
 'use client';
 
 import { useParams } from 'next/navigation';
@@ -12,6 +11,7 @@ import { Skeleton } from '@/components/ui/skeleton';
 import { Alert, AlertDescription } from '@/components/ui/alert';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Progress } from '@/components/ui/progress';
+import { montserrat } from '@/lib/fonts';
 import { 
   Calendar, 
   TrendingUp, 
@@ -21,7 +21,8 @@ import {
   User,
   ArrowUpDown,
   ChevronUp,
-  ChevronDown
+  ChevronDown,
+  Rocket
 } from 'lucide-react';
 import React from 'react';
 
@@ -92,21 +93,21 @@ type MarketStats = {
 
 const getStatusColor = (status: string) => {
   switch (status) {
-    case 'ACTIVE': return 'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-300';
-    case 'PAUSED': return 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-300';
-    case 'RESOLVED': return 'bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-300';
-    case 'CANCELLED': return 'bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-300';
-    default: return 'bg-gray-100 text-gray-800 dark:bg-gray-900 dark:text-gray-300';
+    case 'ACTIVE': return 'bg-green-500/20 text-green-300 border-green-500/30';
+    case 'PAUSED': return 'bg-yellow-500/20 text-yellow-300 border-yellow-500/30';
+    case 'RESOLVED': return 'bg-blue-500/20 text-blue-300 border-blue-500/30';
+    case 'CANCELLED': return 'bg-red-500/20 text-red-300 border-red-500/30';
+    default: return 'bg-gray-500/20 text-gray-300 border-gray-500/30';
   }
 };
 
 const getCategoryColor = (category: string) => {
   switch (category.toLowerCase()) {
-    case 'crypto': return 'bg-orange-100 text-orange-800 dark:bg-orange-900 dark:text-orange-300';
-    case 'sports': return 'bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-300';
-    case 'politics': return 'bg-purple-100 text-purple-800 dark:bg-purple-900 dark:text-purple-300';
-    case 'tech': return 'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-300';
-    default: return 'bg-gray-100 text-gray-800 dark:bg-gray-900 dark:text-gray-300';
+    case 'crypto': return 'bg-orange-500/20 text-orange-300 border-orange-500/30';
+    case 'sports': return 'bg-blue-500/20 text-blue-300 border-blue-500/30';
+    case 'politics': return 'bg-purple-500/20 text-purple-300 border-purple-500/30';
+    case 'tech': return 'bg-green-500/20 text-green-300 border-green-500/30';
+    default: return 'bg-gray-500/20 text-gray-300 border-gray-500/30';
   }
 };
 
@@ -136,7 +137,7 @@ const PriceChart = ({ questionId }: { questionId: string }) => {
   });
 
   if (isLoading) {
-    return <Skeleton className="h-64 w-full" />;
+    return <Skeleton className="h-64 w-full bg-white/20" />;
   }
 
   // Mock chart data for demonstration
@@ -152,7 +153,7 @@ const PriceChart = ({ questionId }: { questionId: string }) => {
   ];
 
   return (
-    <div className="h-64 w-full bg-gray-50 dark:bg-gray-900 rounded-lg p-4 flex items-end justify-around">
+    <div className="h-64 w-full bg-white/5 backdrop-blur-sm rounded-lg p-4 flex items-end justify-around border border-white/15">
       {mockData.map((point, index) => (
         <div key={index} className="flex flex-col items-center space-y-1">
           <div className="flex flex-col space-y-1">
@@ -165,7 +166,7 @@ const PriceChart = ({ questionId }: { questionId: string }) => {
               style={{ height: `${point.no * 30}px` }}
             />
           </div>
-          <span className="text-xs text-gray-500 transform rotate-45 origin-bottom-left">
+          <span className="text-xs text-gray-400 transform rotate-45 origin-bottom-left">
             {point.time}
           </span>
         </div>
@@ -181,17 +182,17 @@ const OrderBook = ({ questionId }: { questionId: string }) => {
   if (isLoading) {
     return (
       <div className="space-y-4">
-        <Skeleton className="h-32 w-full" />
-        <Skeleton className="h-32 w-full" />
+        <Skeleton className="h-32 w-full bg-white/20" />
+        <Skeleton className="h-32 w-full bg-white/20" />
       </div>
     );
   }
 
   if (!orderBook?.success) {
     return (
-      <Alert>
-        <AlertDescription>
-          {/* Error loading order book: {orderBook?.error || 'Unknown error'} */}
+      <Alert className="bg-red-500/10 border-red-500/30">
+        <AlertDescription className="text-red-300">
+          Error loading order book
         </AlertDescription>
       </Alert>
     );
@@ -200,29 +201,29 @@ const OrderBook = ({ questionId }: { questionId: string }) => {
   return (
     <div className="space-y-6">
       <div>
-        <h3 className="text-lg font-semibold mb-3 text-green-700 dark:text-green-400">
+        <h3 className={`text-lg font-semibold mb-3 text-green-400 ${montserrat.className}`}>
           YES Orders (Sells)
         </h3>
         {orderBook.data.yesOrders.sells.length === 0 ? (
           <div className="text-gray-400 text-sm py-4">No sell orders</div>
         ) : (
-          <div className="overflow-x-auto">
+          <div className="overflow-x-auto bg-white/5 backdrop-blur-sm rounded-lg border border-white/15">
             <table className="min-w-full text-sm">
               <thead>
-                <tr className="border-b">
-                  <th className="text-left py-2">Quantity</th>
-                  <th className="text-left py-2">Price</th>
-                  <th className="text-left py-2">Seller</th>
-                  <th className="text-left py-2">Expires</th>
+                <tr className="border-b border-white/15">
+                  <th className="text-left py-2 px-4 text-gray-300">Quantity</th>
+                  <th className="text-left py-2 px-4 text-gray-300">Price</th>
+                  <th className="text-left py-2 px-4 text-gray-300">Seller</th>
+                  <th className="text-left py-2 px-4 text-gray-300">Expires</th>
                 </tr>
               </thead>
               <tbody>
                 {orderBook.data.yesOrders.sells.map((order: any) => (
-                  <tr key={order.id} className="border-b">
-                    <td className="py-2">{order.quantity}</td>
-                    <td className="py-2">${order.pricePerToken.toFixed(2)}</td>
-                    <td className="py-2">{order.userName || order.userId}</td>
-                    <td className="py-2">{formatDate(order.expiresAt)}</td>
+                  <tr key={order.id} className="border-b border-white/10">
+                    <td className="py-2 px-4 text-white">{order.quantity}</td>
+                    <td className="py-2 px-4 text-white">${order.pricePerToken.toFixed(2)}</td>
+                    <td className="py-2 px-4 text-gray-300">{order.userName || order.userId}</td>
+                    <td className="py-2 px-4 text-gray-300">{formatDate(order.expiresAt)}</td>
                   </tr>
                 ))}
               </tbody>
@@ -232,29 +233,29 @@ const OrderBook = ({ questionId }: { questionId: string }) => {
       </div>
 
       <div>
-        <h3 className="text-lg font-semibold mb-3 text-red-700 dark:text-red-400">
+        <h3 className={`text-lg font-semibold mb-3 text-red-400 ${montserrat.className}`}>
           NO Orders (Buys)
         </h3>
         {orderBook.data.noOrders.buys.length === 0 ? (
           <div className="text-gray-400 text-sm py-4">No buy orders</div>
         ) : (
-          <div className="overflow-x-auto">
+          <div className="overflow-x-auto bg-white/5 backdrop-blur-sm rounded-lg border border-white/15">
             <table className="min-w-full text-sm">
               <thead>
-                <tr className="border-b">
-                  <th className="text-left py-2">Quantity</th>
-                  <th className="text-left py-2">Price</th>
-                  <th className="text-left py-2">Buyer</th>
-                  <th className="text-left py-2">Expires</th>
+                <tr className="border-b border-white/15">
+                  <th className="text-left py-2 px-4 text-gray-300">Quantity</th>
+                  <th className="text-left py-2 px-4 text-gray-300">Price</th>
+                  <th className="text-left py-2 px-4 text-gray-300">Buyer</th>
+                  <th className="text-left py-2 px-4 text-gray-300">Expires</th>
                 </tr>
               </thead>
               <tbody>
                 {orderBook.data.noOrders.buys.map((order: any) => (
-                  <tr key={order.id} className="border-b">
-                    <td className="py-2">{order.quantity}</td>
-                    <td className="py-2">${order.pricePerToken.toFixed(2)}</td>
-                    <td className="py-2">{order.userName || order.userId}</td>
-                    <td className="py-2">{formatDate(order.expiresAt)}</td>
+                  <tr key={order.id} className="border-b border-white/10">
+                    <td className="py-2 px-4 text-white">{order.quantity}</td>
+                    <td className="py-2 px-4 text-white">${order.pricePerToken.toFixed(2)}</td>
+                    <td className="py-2 px-4 text-gray-300">{order.userName || order.userId}</td>
+                    <td className="py-2 px-4 text-gray-300">{formatDate(order.expiresAt)}</td>
                   </tr>
                 ))}
               </tbody>
@@ -274,7 +275,7 @@ const TokenHoldings = ({ yesHoldings, noHoldings }: {
   return (
     <div className="space-y-6">
       <div>
-        <h3 className="text-lg font-semibold mb-3 text-green-700 dark:text-green-400">
+        <h3 className={`text-lg font-semibold mb-3 text-green-400 ${montserrat.className}`}>
           YES Token Holdings
         </h3>
         {yesHoldings.length === 0 ? (
@@ -282,19 +283,19 @@ const TokenHoldings = ({ yesHoldings, noHoldings }: {
         ) : (
           <div className="space-y-2">
             {yesHoldings.map((holding, index) => (
-              <Card key={index} className="p-3">
+              <Card key={index} className="p-3 bg-white/5 backdrop-blur-sm border-white/15">
                 <div className="flex justify-between items-center">
                   <div className="flex items-center space-x-2">
-                    <User className="w-4 h-4" />
-                    <span className="font-medium">
+                    <User className="w-4 h-4 text-gray-400" />
+                    <span className="font-medium text-white">
                       {holding.user.firstName || holding.user.lastName 
                         ? `${holding.user.firstName || ''} ${holding.user.lastName || ''}`.trim()
                         : holding.user.id}
                     </span>
                   </div>
                   <div className="text-right">
-                    <div className="font-semibold">{holding.quantity} tokens</div>
-                    <div className="text-sm text-gray-500">
+                    <div className="font-semibold text-white">{holding.quantity} tokens</div>
+                    <div className="text-sm text-gray-400">
                       Avg: ${holding.averageBuyPrice.toFixed(2)}
                     </div>
                   </div>
@@ -306,7 +307,7 @@ const TokenHoldings = ({ yesHoldings, noHoldings }: {
       </div>
 
       <div>
-        <h3 className="text-lg font-semibold mb-3 text-red-700 dark:text-red-400">
+        <h3 className={`text-lg font-semibold mb-3 text-red-400 ${montserrat.className}`}>
           NO Token Holdings
         </h3>
         {noHoldings.length === 0 ? (
@@ -314,21 +315,18 @@ const TokenHoldings = ({ yesHoldings, noHoldings }: {
         ) : (
           <div className="space-y-2">
             {noHoldings.map((holding, index) => (
-              <Card key={index} className="p-3">
+              <Card key={index} className="p-3 bg-white/5 backdrop-blur-sm border-white/15">
                 <div className="flex justify-between items-center">
                   <div className="flex items-center space-x-2">
-                    <User className="w-4 h-4" />
-                    <span className="font-medium">
+                    <User className="w-4 h-4 text-gray-400" />
+                    <span className="font-medium text-white">
                       {holding.user.firstName || holding.user.lastName 
                         ? `${holding.user.firstName || ''} ${holding.user.lastName || ''}`.trim()
                         : holding.user.id}
                     </span>
                   </div>
                   <div className="text-right">
-                    <div className="font-semibold">{holding.quantity} tokens</div>
-                    <div className="text-sm text-gray-500">
-                      {/* Avg: ${holding.averageBuyPrice.toFixed(2)} */}
-                    </div>
+                    <div className="font-semibold text-white">{holding.quantity} tokens</div>
                   </div>
                 </div>
               </Card>
@@ -340,8 +338,6 @@ const TokenHoldings = ({ yesHoldings, noHoldings }: {
   );
 };
 
-     
-
 export default function QuestionDetails({
   params,
 }:{
@@ -349,22 +345,20 @@ export default function QuestionDetails({
 }) {
   const { questionid } = React.use(params)
   
-  
-  
   const { data, error, isLoading } = useGetQuestionByIdQuery(questionid as string);
 
   if (isLoading) {
     return (
       <>
         <Navigation />
-        <div className="min-h-screen bg-background pt-20">
+        <div className="min-h-screen bg-gradient-to-br from-black via-zinc-900 to-purple-950/30 pt-20">
           <div className="max-w-6xl mx-auto px-4 py-8">
             <div className="space-y-6">
-              <Skeleton className="h-8 w-3/4" />
-              <Skeleton className="h-64 w-full" />
+              <Skeleton className="h-8 w-3/4 bg-white/20" />
+              <Skeleton className="h-64 w-full bg-white/20" />
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <Skeleton className="h-32" />
-                <Skeleton className="h-32" />
+                <Skeleton className="h-32 bg-white/20" />
+                <Skeleton className="h-32 bg-white/20" />
               </div>
             </div>
           </div>
@@ -377,11 +371,11 @@ export default function QuestionDetails({
     return (
       <>
         <Navigation />
-        <div className="min-h-screen bg-background pt-20">
+        <div className="min-h-screen bg-gradient-to-br from-black via-zinc-900 to-purple-950/30 pt-20">
           <div className="max-w-6xl mx-auto px-4 py-8">
-            <Alert>
-              <AlertDescription>
-                {/* Error loading question: {error?.message || data?.error || 'Unknown error'} */}
+            <Alert className="bg-red-500/10 border-red-500/30">
+              <AlertDescription className="text-red-300">
+                Error loading question details
               </AlertDescription>
             </Alert>
           </div>
@@ -397,7 +391,7 @@ export default function QuestionDetails({
   return (
     <>
       <Navigation />
-      <div className="min-h-screen bg-background pt-20">
+      <div className="min-h-screen bg-gradient-to-br from-black via-zinc-900 to-purple-950/30 pt-20">
         <div className="max-w-6xl mx-auto px-4 py-8">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
@@ -409,21 +403,23 @@ export default function QuestionDetails({
               <div className="flex flex-col lg:flex-row gap-6 mb-6">
                 <div className="flex-1">
                   <div className="flex items-center gap-2 mb-4">
-                    <Badge variant="outline" className={getCategoryColor(question.category)}>
+                    <Badge className={getCategoryColor(question.category)}>
                       {question.category}
                     </Badge>
-                    <Badge variant="outline" className={getStatusColor(question.status)}>
+                    <Badge className={getStatusColor(question.status)}>
                       {question.status}
                     </Badge>
                     {question.isResolved && (
-                      <Badge variant="outline" className="bg-blue-100 text-blue-800">
+                      <Badge className="bg-blue-500/20 text-blue-300 border-blue-500/30">
                         Resolved: {question.resolvedAnswer}
                       </Badge>
                     )}
                   </div>
-                  <h1 className="text-3xl lg:text-4xl font-bold mb-4">{question.title}</h1>
-                  <p className="text-muted-foreground text-lg mb-4">{question.description}</p>
-                  <div className="flex items-center gap-4 text-sm text-muted-foreground">
+                  <h1 className={`text-3xl lg:text-4xl font-bold mb-4 text-white ${montserrat.className}`}>
+                    {question.title}
+                  </h1>
+                  <p className="text-gray-300 text-lg mb-4">{question.description}</p>
+                  <div className="flex items-center gap-4 text-sm text-gray-400">
                     <div className="flex items-center gap-1">
                       <Calendar className="w-4 h-4" />
                       <span>Ends: {formatDate(question.resolutionDate)}</span>
@@ -439,7 +435,7 @@ export default function QuestionDetails({
                     <img 
                       src={question.imageUrl} 
                       alt={question.title}
-                      className="w-full h-48 object-cover rounded-lg"
+                      className="w-full h-48 object-cover rounded-lg border border-white/15"
                     />
                   </div>
                 )}
@@ -453,19 +449,21 @@ export default function QuestionDetails({
                 animate={{ opacity: 1, x: 0 }}
                 transition={{ delay: 0.2 }}
               >
-                <Card className="bg-green-50 dark:bg-green-900/20 border-green-200 dark:border-green-800">
+                <Card className="bg-gradient-to-br from-green-500/20 to-green-600/20 border-green-500/30 backdrop-blur-sm transition-all duration-300 hover:shadow-[0_12px_40px_rgba(16,185,129,0.3)] hover:-translate-y-1">
                   <CardContent className="p-6 text-center">
                     <div className="flex items-center justify-center space-x-2 mb-2">
-                      <ChevronUp className="w-5 h-5 text-green-600" />
-                      <span className="text-sm font-medium text-green-700 dark:text-green-400">
+                      <div className="w-8 h-8 rounded-lg bg-gradient-to-r from-green-400 to-green-600 flex items-center justify-center">
+                        <ChevronUp className="w-4 h-4 text-white" />
+                      </div>
+                      <span className={`text-sm font-medium text-green-300 ${montserrat.className}`}>
                         YES Price
                       </span>
                     </div>
-                    <div className="text-3xl font-bold text-green-700 dark:text-green-400 mb-2">
-                      {/* ${question.currentYesPrice.toFixed(2)} */}
+                    <div className={`text-3xl font-bold text-green-300 mb-2 ${montserrat.className}`}>
+                      ${question.currentYesPrice?.toFixed(2) || '1.00'}
                     </div>
-                    <div className="text-xs text-green-600 dark:text-green-500">
-                      {question.yesToken?.circulatingSupply} tokens in circulation
+                    <div className="text-xs text-green-400">
+                      {question.yesToken?.circulatingSupply || 0} tokens in circulation
                     </div>
                   </CardContent>
                 </Card>
@@ -476,19 +474,21 @@ export default function QuestionDetails({
                 animate={{ opacity: 1, x: 0 }}
                 transition={{ delay: 0.3 }}
               >
-                <Card className="bg-red-50 dark:bg-red-900/20 border-red-200 dark:border-red-800">
+                <Card className="bg-gradient-to-br from-red-500/20 to-red-600/20 border-red-500/30 backdrop-blur-sm transition-all duration-300 hover:shadow-[0_12px_40px_rgba(239,68,68,0.3)] hover:-translate-y-1">
                   <CardContent className="p-6 text-center">
                     <div className="flex items-center justify-center space-x-2 mb-2">
-                      <ChevronDown className="w-5 h-5 text-red-600" />
-                      <span className="text-sm font-medium text-red-700 dark:text-red-400">
+                      <div className="w-8 h-8 rounded-lg bg-gradient-to-r from-red-400 to-red-600 flex items-center justify-center">
+                        <ChevronDown className="w-4 h-4 text-white" />
+                      </div>
+                      <span className={`text-sm font-medium text-red-300 ${montserrat.className}`}>
                         NO Price
                       </span>
                     </div>
-                    <div className="text-3xl font-bold text-red-700 dark:text-red-400 mb-2">
-                      {/* ${question.currentNoPrice.toFixed(2)} */}
+                    <div className={`text-3xl font-bold text-red-300 mb-2 ${montserrat.className}`}>
+                      ${question.currentNoPrice?.toFixed(2) || '1.00'}
                     </div>
-                    <div className="text-xs text-red-600 dark:text-red-500">
-                      {question.noToken?.circulatingSupply} tokens in circulation
+                    <div className="text-xs text-red-400">
+                      {question.noToken?.circulatingSupply || 0} tokens in circulation
                     </div>
                   </CardContent>
                 </Card>
@@ -502,18 +502,20 @@ export default function QuestionDetails({
               transition={{ delay: 0.4 }}
               className="mb-8"
             >
-              <Card>
+              <Card className="bg-white/5 backdrop-blur-sm border-white/15">
                 <CardHeader>
-                  <CardTitle className="flex items-center gap-2">
-                    <BarChart3 className="w-5 h-5" />
+                  <CardTitle className={`flex items-center gap-2 text-white ${montserrat.className}`}>
+                    <div className="w-8 h-8 rounded-lg bg-gradient-to-r from-purple-400 to-purple-600 flex items-center justify-center">
+                      <BarChart3 className="w-4 h-4 text-white" />
+                    </div>
                     Market Sentiment
                   </CardTitle>
                 </CardHeader>
                 <CardContent>
                   <div className="space-y-4">
                     <div className="flex justify-between text-sm">
-                      <span className="text-green-600 font-medium">YES {yesPercentage.toFixed(1)}%</span>
-                      <span className="text-red-600 font-medium">NO {(100 - yesPercentage).toFixed(1)}%</span>
+                      <span className="text-green-400 font-medium">YES {yesPercentage.toFixed(1)}%</span>
+                      <span className="text-red-400 font-medium">NO {(100 - yesPercentage).toFixed(1)}%</span>
                     </div>
                     <Progress value={yesPercentage} className="h-3" />
                   </div>
@@ -528,30 +530,32 @@ export default function QuestionDetails({
               transition={{ delay: 0.5 }}
               className="mb-8"
             >
-              <Card>
+              <Card className="bg-white/5 backdrop-blur-sm border-white/15">
                 <CardHeader>
-                  <CardTitle className="flex items-center gap-2">
-                    <Activity className="w-5 h-5" />
+                  <CardTitle className={`flex items-center gap-2 text-white ${montserrat.className}`}>
+                    <div className="w-8 h-8 rounded-lg bg-gradient-to-r from-blue-400 to-blue-600 flex items-center justify-center">
+                      <Activity className="w-4 h-4 text-white" />
+                    </div>
                     Market Statistics
                   </CardTitle>
                 </CardHeader>
                 <CardContent>
                   <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
                     <div className="text-center">
-                      <div className="text-2xl font-bold">{stats.totalParticipants}</div>
-                      <div className="text-sm text-muted-foreground">Participants</div>
+                      <div className={`text-2xl font-bold text-white ${montserrat.className}`}>{stats.totalParticipants}</div>
+                      <div className="text-sm text-gray-400">Participants</div>
                     </div>
                     <div className="text-center">
-                      <div className="text-2xl font-bold">{formatVolume(stats.totalVolume)}</div>
-                      <div className="text-sm text-muted-foreground">Total Volume</div>
+                      <div className={`text-2xl font-bold text-white ${montserrat.className}`}>{formatVolume(stats.totalVolume)}</div>
+                      <div className="text-sm text-gray-400">Total Volume</div>
                     </div>
                     <div className="text-center">
-                      <div className="text-2xl font-bold">{stats.yesHolders}</div>
-                      <div className="text-sm text-muted-foreground">YES Holders</div>
+                      <div className={`text-2xl font-bold text-white ${montserrat.className}`}>{stats.yesHolders}</div>
+                      <div className="text-sm text-gray-400">YES Holders</div>
                     </div>
                     <div className="text-center">
-                      <div className="text-2xl font-bold">{stats.noHolders}</div>
-                      <div className="text-sm text-muted-foreground">NO Holders</div>
+                      <div className={`text-2xl font-bold text-white ${montserrat.className}`}>{stats.noHolders}</div>
+                      <div className="text-sm text-gray-400">NO Holders</div>
                     </div>
                   </div>
                 </CardContent>
@@ -565,20 +569,37 @@ export default function QuestionDetails({
               transition={{ delay: 0.6 }}
             >
               <Tabs defaultValue="chart" className="w-full">
-                <TabsList className="grid w-full grid-cols-3">
-                  <TabsTrigger value="chart">Price Chart</TabsTrigger>
-                  <TabsTrigger value="orderbook">Order Book</TabsTrigger>
-                  <TabsTrigger value="holdings">Token Holdings</TabsTrigger>
+                <TabsList className="flex justify-center bg-white/5 backdrop-blur-sm border border-white/15 rounded-xl p-1 grid w-full grid-cols-3">
+                  <TabsTrigger 
+                    value="chart" 
+                    className="px-6 py-3 text-white data-[state=active]:bg-gradient-to-r data-[state=active]:from-emerald-500 data-[state=active]:to-green-600 data-[state=active]:text-white rounded-lg"
+                  >
+                    Price Chart
+                  </TabsTrigger>
+                  <TabsTrigger 
+                    value="orderbook" 
+                    className="px-6 py-3 text-white data-[state=active]:bg-gradient-to-r data-[state=active]:from-blue-500 data-[state=active]:to-blue-700 data-[state=active]:text-white rounded-lg"
+                  >
+                    Order Book
+                  </TabsTrigger>
+                  <TabsTrigger 
+                    value="holdings" 
+                    className="px-6 py-3 text-white data-[state=active]:bg-gradient-to-r data-[state=active]:from-purple-500 data-[state=active]:to-purple-700 data-[state=active]:text-white rounded-lg"
+                  >
+                    Token Holdings
+                  </TabsTrigger>
                 </TabsList>
                 
                 <TabsContent value="chart" className="mt-6">
-                  <Card>
+                  <Card className="bg-white/5 backdrop-blur-sm border-white/15">
                     <CardHeader>
-                      <CardTitle className="flex items-center gap-2">
-                        <TrendingUp className="w-5 h-5" />
+                      <CardTitle className={`flex items-center gap-2 text-white ${montserrat.className}`}>
+                        <div className="w-8 h-8 rounded-lg bg-gradient-to-r from-green-400 to-green-600 flex items-center justify-center">
+                          <TrendingUp className="w-4 h-4 text-white" />
+                        </div>
                         Price History (7 Days)
                       </CardTitle>
-                      <CardDescription>
+                      <CardDescription className="text-gray-400">
                         Historical price movement for YES and NO tokens
                       </CardDescription>
                     </CardHeader>
@@ -589,13 +610,15 @@ export default function QuestionDetails({
                 </TabsContent>
 
                 <TabsContent value="orderbook" className="mt-6">
-                  <Card>
+                  <Card className="bg-white/5 backdrop-blur-sm border-white/15">
                     <CardHeader>
-                      <CardTitle className="flex items-center gap-2">
-                        <ArrowUpDown className="w-5 h-5" />
+                      <CardTitle className={`flex items-center gap-2 text-white ${montserrat.className}`}>
+                        <div className="w-8 h-8 rounded-lg bg-gradient-to-r from-blue-400 to-blue-600 flex items-center justify-center">
+                          <ArrowUpDown className="w-4 h-4 text-white" />
+                        </div>
                         Order Book
                       </CardTitle>
-                      <CardDescription>
+                      <CardDescription className="text-gray-400">
                         Current buy and sell orders from other traders
                       </CardDescription>
                     </CardHeader>
@@ -606,13 +629,15 @@ export default function QuestionDetails({
                 </TabsContent>
 
                 <TabsContent value="holdings" className="mt-6">
-                  <Card>
+                  <Card className="bg-white/5 backdrop-blur-sm border-white/15">
                     <CardHeader>
-                      <CardTitle className="flex items-center gap-2">
-                        <Users className="w-5 h-5" />
+                      <CardTitle className={`flex items-center gap-2 text-white ${montserrat.className}`}>
+                        <div className="w-8 h-8 rounded-lg bg-gradient-to-r from-purple-400 to-purple-600 flex items-center justify-center">
+                          <Users className="w-4 h-4 text-white" />
+                        </div>
                         Token Holdings
                       </CardTitle>
-                      <CardDescription>
+                      <CardDescription className="text-gray-400">
                         Current token holders and their positions
                       </CardDescription>
                     </CardHeader>
@@ -634,22 +659,22 @@ export default function QuestionDetails({
               transition={{ delay: 0.7 }}
               className="mt-8"
             >
-              <Card>
+              <Card className="bg-white/5 backdrop-blur-sm border-white/15">
                 <CardHeader>
-                  <CardTitle>Trade on This Market</CardTitle>
-                  <CardDescription>
+                  <CardTitle className={`text-white ${montserrat.className}`}>Trade on This Market</CardTitle>
+                  <CardDescription className="text-gray-400">
                     Buy YES or NO tokens to participate in this prediction market
                   </CardDescription>
                 </CardHeader>
                 <CardContent>
                   <div className="flex flex-col sm:flex-row gap-4">
-                    <Button size="lg" className="flex-1 bg-green-600 hover:bg-green-700">
+                    <Button size="lg" className="flex-1 bg-gradient-to-r from-green-500 to-green-600 hover:from-green-600 hover:to-green-700 text-white">
                       <TrendingUp className="w-4 h-4 mr-2" />
-                      {/* Buy YES at ${question.currentYesPrice.toFixed(2)} */}
+                      Buy YES at ${question.currentYesPrice?.toFixed(2) || '1.00'}
                     </Button>
-                    <Button size="lg" variant="destructive" className="flex-1">
+                    <Button size="lg" className="flex-1 bg-gradient-to-r from-red-500 to-red-600 hover:from-red-600 hover:to-red-700 text-white">
                       <TrendingUp className="w-4 h-4 mr-2" />
-                      {/* Buy NO at ${question.currentNoPrice.toFixed(2)} */}
+                      Buy NO at ${question.currentNoPrice?.toFixed(2) || '1.00'}
                     </Button>
                   </div>
                 </CardContent>

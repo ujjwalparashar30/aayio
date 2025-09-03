@@ -11,6 +11,7 @@ import { Badge } from '@/components/ui/badge'
 import { Skeleton } from '@/components/ui/skeleton'
 import { Input } from '@/components/ui/input'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
+import { montserrat } from '@/lib/fonts'
 import { 
   Search,
   Filter,
@@ -21,7 +22,9 @@ import {
   ArrowUpDown,
   Grid3X3,
   List,
-  Users
+  Users,
+  Rocket,
+  BarChart3
 } from 'lucide-react'
 
 const MarketsPage = () => {
@@ -66,28 +69,36 @@ const MarketsPage = () => {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 to-slate-100 dark:from-slate-900 dark:to-slate-800">
+    <div className="min-h-screen bg-gradient-to-br from-black via-zinc-900 to-purple-950/30">
       <Navigation />
       
-      {/* Header */}
-      <motion.div
-        initial={{ opacity: 0, y: -20 }}
-        animate={{ opacity: 1, y: 0 }}
-        className="pt-20 pb-8 bg-white/80 dark:bg-slate-900/80 backdrop-blur-md border-b border-slate-200 dark:border-slate-700"
-      >
-        <div className="max-w-7xl mx-auto px-6">
-          <div className="text-center mb-8">
-            <h1 className="text-4xl font-bold text-slate-900 dark:text-white mb-4 flex items-center justify-center gap-3">
-              <Target className="w-10 h-10 text-blue-500" />
-              Prediction Markets
-            </h1>
-            <p className="text-xl text-slate-600 dark:text-slate-400 max-w-2xl mx-auto">
-              Trade on real-world events and test your forecasting skills with our active prediction markets
-            </p>
-          </div>
+      <div className="max-w-7xl mx-auto px-6 py-24">
+        {/* Header */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.8 }}
+          className="mb-12 text-center"
+        >
+          <h1 className={`text-4xl md:text-5xl font-bold text-white ${montserrat.className}`}>
+            Prediction Markets
+            <div className="inline-block ml-4">
+              <Rocket className="w-12 h-12 text-white animate-pulse" />
+            </div>
+          </h1>
+          <p className="text-gray-400 mt-3 text-lg max-w-2xl mx-auto">
+            Trade on real-world events and test your forecasting skills with our active prediction markets
+          </p>
+        </motion.div>
 
-          {/* Filters */}
-          <div className="grid grid-cols-1 lg:grid-cols-6 gap-4 mb-6">
+        {/* Filters */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.8, delay: 0.2 }}
+          className="backdrop-blur-sm bg-white/5 border border-white/15 rounded-2xl p-6 mb-8"
+        >
+          <div className="grid grid-cols-1 lg:grid-cols-6 gap-4">
             {/* Search */}
             <div className="lg:col-span-2 relative">
               <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-gray-400" />
@@ -95,18 +106,18 @@ const MarketsPage = () => {
                 placeholder="Search markets..."
                 value={searchTerm}
                 onChange={(e) => handleSearch(e.target.value)}
-                className="pl-10"
+                className="pl-10 bg-white/5 border-white/15 text-white placeholder:text-gray-400 focus:bg-white/10"
               />
             </div>
 
             {/* Category Filter */}
             <Select value={selectedCategory} onValueChange={(value) => { setSelectedCategory(value); setCurrentPage(1) }}>
-              <SelectTrigger>
+              <SelectTrigger className="bg-white/5 border-white/15 text-white">
                 <SelectValue placeholder="Category" />
               </SelectTrigger>
-              <SelectContent>
+              <SelectContent className="bg-gray-900/95 backdrop-blur-lg border-white/20 text-white">
                 {categories.map(category => (
-                  <SelectItem key={category} value={category}>
+                  <SelectItem key={category} value={category} className="focus:bg-white/10">
                     {category === 'all' ? 'All Categories' : category.charAt(0).toUpperCase() + category.slice(1)}
                   </SelectItem>
                 ))}
@@ -115,12 +126,12 @@ const MarketsPage = () => {
 
             {/* Status Filter */}
             <Select value={selectedStatus} onValueChange={(value) => { setSelectedStatus(value); setCurrentPage(1) }}>
-              <SelectTrigger>
+              <SelectTrigger className="bg-white/5 border-white/15 text-white">
                 <SelectValue placeholder="Status" />
               </SelectTrigger>
-              <SelectContent>
+              <SelectContent className="bg-gray-900/95 backdrop-blur-lg border-white/20 text-white">
                 {statuses.map(status => (
-                  <SelectItem key={status} value={status}>
+                  <SelectItem key={status} value={status} className="focus:bg-white/10">
                     {status.charAt(0) + status.slice(1).toLowerCase()}
                   </SelectItem>
                 ))}
@@ -134,14 +145,14 @@ const MarketsPage = () => {
               setSortOrder(order as 'asc' | 'desc')
               setCurrentPage(1)
             }}>
-              <SelectTrigger>
+              <SelectTrigger className="bg-white/5 border-white/15 text-white">
                 <SelectValue placeholder="Sort by" />
               </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="createdAt-desc">Newest First</SelectItem>
-                <SelectItem value="createdAt-asc">Oldest First</SelectItem>
-                <SelectItem value="resolutionDate-asc">Ending Soon</SelectItem>
-                <SelectItem value="title-asc">A to Z</SelectItem>
+              <SelectContent className="bg-gray-900/95 backdrop-blur-lg border-white/20 text-white">
+                <SelectItem value="createdAt-desc" className="focus:bg-white/10">Newest First</SelectItem>
+                <SelectItem value="createdAt-asc" className="focus:bg-white/10">Oldest First</SelectItem>
+                <SelectItem value="resolutionDate-asc" className="focus:bg-white/10">Ending Soon</SelectItem>
+                <SelectItem value="title-asc" className="focus:bg-white/10">A to Z</SelectItem>
               </SelectContent>
             </Select>
 
@@ -151,7 +162,11 @@ const MarketsPage = () => {
                 variant={viewMode === 'grid' ? 'default' : 'outline'}
                 size="sm"
                 onClick={() => setViewMode('grid')}
-                className="flex-1"
+                className={`flex-1 ${
+                  viewMode === 'grid' 
+                    ? 'bg-gradient-to-r from-blue-500 to-blue-700 text-white' 
+                    : 'bg-white/5 border-white/15 text-white hover:bg-white/10'
+                }`}
               >
                 <Grid3X3 className="w-4 h-4" />
               </Button>
@@ -159,7 +174,11 @@ const MarketsPage = () => {
                 variant={viewMode === 'list' ? 'default' : 'outline'}
                 size="sm"
                 onClick={() => setViewMode('list')}
-                className="flex-1"
+                className={`flex-1 ${
+                  viewMode === 'list' 
+                    ? 'bg-gradient-to-r from-blue-500 to-blue-700 text-white' 
+                    : 'bg-white/5 border-white/15 text-white hover:bg-white/10'
+                }`}
               >
                 <List className="w-4 h-4" />
               </Button>
@@ -168,7 +187,7 @@ const MarketsPage = () => {
 
           {/* Stats */}
           {marketsData && (
-            <div className="flex items-center justify-between text-sm text-slate-600 dark:text-slate-400">
+            <div className="flex items-center justify-between text-sm text-gray-400 mt-4 pt-4 border-t border-white/10">
               <span>
                 Showing {((currentPage - 1) * pageSize) + 1}-{Math.min(currentPage * pageSize, pagination?.total || 0)} of {pagination?.total || 0} markets
               </span>
@@ -177,61 +196,68 @@ const MarketsPage = () => {
               </span>
             </div>
           )}
-        </div>
-      </motion.div>
+        </motion.div>
 
-      <div className="max-w-7xl mx-auto px-6 py-8">
         {/* Loading State */}
         {isLoading && (
-          <div className={`grid gap-6 ${viewMode === 'grid' ? 'grid-cols-1 md:grid-cols-2 lg:grid-cols-3' : 'grid-cols-1'}`}>
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            className={`grid gap-6 ${viewMode === 'grid' ? 'grid-cols-1 md:grid-cols-2 lg:grid-cols-3' : 'grid-cols-1'}`}
+          >
             {Array.from({ length: pageSize }).map((_, i) => (
-              <Card key={i}>
-                <CardHeader>
-                  <div className="flex gap-2 mb-2">
-                    <Skeleton className="h-5 w-16" />
-                    <Skeleton className="h-5 w-20" />
-                  </div>
-                  <Skeleton className="h-6 w-full" />
-                </CardHeader>
-                <CardContent>
-                  <Skeleton className="h-16 w-full mb-4" />
-                  <div className="grid grid-cols-2 gap-3">
-                    <Skeleton className="h-16 w-full" />
-                    <Skeleton className="h-16 w-full" />
-                  </div>
-                </CardContent>
+              <Card key={i} className="p-6 bg-white/5 backdrop-blur-sm border border-white/15 rounded-2xl">
+                <div className="flex gap-2 mb-4">
+                  <Skeleton className="h-5 w-16 bg-white/20" />
+                  <Skeleton className="h-5 w-20 bg-white/20" />
+                </div>
+                <Skeleton className="h-6 w-full mb-4 bg-white/20" />
+                <Skeleton className="h-16 w-full mb-4 bg-white/20" />
+                <div className="grid grid-cols-2 gap-3">
+                  <Skeleton className="h-16 w-full bg-white/20" />
+                  <Skeleton className="h-16 w-full bg-white/20" />
+                </div>
               </Card>
             ))}
-          </div>
+          </motion.div>
         )}
 
         {/* Error State */}
         {error && (
-          <Card>
-            <CardContent className="p-12 text-center">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+          >
+            <Card className="p-12 bg-white/5 backdrop-blur-sm border border-white/15 rounded-2xl text-center">
               <Target className="w-16 h-16 text-red-400 mx-auto mb-4" />
-              <h3 className="text-xl font-semibold text-slate-900 dark:text-white mb-2">
+              <h3 className={`text-xl font-semibold text-white mb-2 ${montserrat.className}`}>
                 Unable to Load Markets
               </h3>
-              <p className="text-slate-600 dark:text-slate-400 mb-6">
+              <p className="text-gray-400 mb-6">
                 There was an error loading the prediction markets. Please try again.
               </p>
-              <Button onClick={() => window.location.reload()}>
+              <Button 
+                onClick={() => window.location.reload()}
+                className="bg-gradient-to-r from-red-500 to-red-700 text-white hover:from-red-600 hover:to-red-800"
+              >
                 Retry Loading
               </Button>
-            </CardContent>
-          </Card>
+            </Card>
+          </motion.div>
         )}
 
         {/* Empty State */}
         {!isLoading && !error && markets.length === 0 && (
-          <Card>
-            <CardContent className="p-12 text-center">
-              <Target className="w-16 h-16 text-slate-400 mx-auto mb-4" />
-              <h3 className="text-xl font-semibold text-slate-900 dark:text-white mb-2">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+          >
+            <Card className="p-12 bg-white/5 backdrop-blur-sm border border-white/15 rounded-2xl text-center">
+              <Target className="w-16 h-16 text-gray-400 mx-auto mb-4" />
+              <h3 className={`text-xl font-semibold text-white mb-2 ${montserrat.className}`}>
                 No Markets Found
               </h3>
-              <p className="text-slate-600 dark:text-slate-400 mb-6">
+              <p className="text-gray-400 mb-6">
                 {searchTerm || selectedCategory !== 'all' 
                   ? 'Try adjusting your search or filters to find more markets.'
                   : 'No prediction markets are currently available.'}
@@ -244,12 +270,13 @@ const MarketsPage = () => {
                     setSelectedCategory('all')
                     setCurrentPage(1)
                   }}
+                  className="bg-white/5 border-white/15 text-white hover:bg-white/10"
                 >
                   Clear Filters
                 </Button>
               )}
-            </CardContent>
-          </Card>
+            </Card>
+          </motion.div>
         )}
 
         {/* Markets Grid/List */}
@@ -257,6 +284,7 @@ const MarketsPage = () => {
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8, delay: 0.4 }}
             className={`grid gap-6 ${
               viewMode === 'grid' 
                 ? 'grid-cols-1 md:grid-cols-2 lg:grid-cols-3' 
@@ -272,7 +300,7 @@ const MarketsPage = () => {
                 whileHover={{ scale: viewMode === 'grid' ? 1.02 : 1.01, y: -5 }}
               >
                 <Card 
-                  className={`cursor-pointer group border-0 bg-white/80 dark:bg-slate-800/80 backdrop-blur-sm hover:shadow-xl transition-all duration-300 ${
+                  className={`cursor-pointer group bg-white/5 backdrop-blur-sm border border-white/15 rounded-2xl hover:bg-white/10 hover:shadow-[0_12px_40px_rgba(0,0,0,0.5)] hover:-translate-y-1 transition-all duration-300 ${
                     viewMode === 'list' ? 'p-0' : ''
                   }`}
                   onClick={() => handleMarketClick(market.id)}
@@ -282,47 +310,47 @@ const MarketsPage = () => {
                     <>
                       <CardHeader className="pb-4">
                         <div className="flex items-center gap-2 mb-3">
-                          <Badge variant="outline" className="text-xs font-medium">
+                          <Badge className="text-xs font-medium bg-white/10 text-white border-white/20">
                             {market.category || 'General'}
                           </Badge>
-                          <Badge variant="outline" className={
+                          <Badge className={`text-xs ${
                             market.status === 'ACTIVE' 
-                              ? 'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-300 border-green-200'
+                              ? 'bg-green-500/20 text-green-300 border-green-500/30'
                               : market.status === 'RESOLVED'
-                              ? 'bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-300 border-blue-200'
-                              : 'bg-gray-100 text-gray-800'
-                          }>
+                              ? 'bg-blue-500/20 text-blue-300 border-blue-500/30'
+                              : 'bg-gray-500/20 text-gray-300 border-gray-500/30'
+                          }`}>
                             {market.status}
                           </Badge>
                         </div>
-                        <CardTitle className="text-lg leading-tight group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors line-clamp-2">
+                        <CardTitle className={`text-lg leading-tight text-white group-hover:text-blue-300 transition-colors line-clamp-2 ${montserrat.className}`}>
                           {market.title}
                         </CardTitle>
                       </CardHeader>
                       
                       <CardContent className="space-y-4">
-                        <p className="text-slate-600 dark:text-slate-400 text-sm line-clamp-2">
+                        <p className="text-gray-400 text-sm line-clamp-2">
                           {market.description}
                         </p>
                         
                         {/* Price Cards */}
                         <div className="grid grid-cols-2 gap-3">
-                          <div className="bg-gradient-to-r from-green-50 to-green-100 dark:from-green-900/20 dark:to-green-800/20 rounded-lg p-3 text-center border border-green-200 dark:border-green-800">
-                            <p className="text-green-600 dark:text-green-400 text-xs font-semibold mb-1">YES</p>
-                            <p className="text-green-700 dark:text-green-300 font-bold text-lg">
+                          <div className="bg-gradient-to-r from-green-500/20 to-green-600/20 rounded-lg p-3 text-center border border-green-500/30">
+                            <p className="text-green-300 text-xs font-semibold mb-1">YES</p>
+                            <p className="text-green-200 font-bold text-lg">
                               ₹{Number(market.currentYesPrice || market.yesToken?.currentPrice || 1.0).toFixed(2)}
                             </p>
                           </div>
-                          <div className="bg-gradient-to-r from-red-50 to-red-100 dark:from-red-900/20 dark:to-red-800/20 rounded-lg p-3 text-center border border-red-200 dark:border-red-800">
-                            <p className="text-red-600 dark:text-red-400 text-xs font-semibold mb-1">NO</p>
-                            <p className="text-red-700 dark:text-red-300 font-bold text-lg">
+                          <div className="bg-gradient-to-r from-red-500/20 to-red-600/20 rounded-lg p-3 text-center border border-red-500/30">
+                            <p className="text-red-300 text-xs font-semibold mb-1">NO</p>
+                            <p className="text-red-200 font-bold text-lg">
                               ₹{Number(market.currentNoPrice || market.noToken?.currentPrice || 1.0).toFixed(2)}
                             </p>
                           </div>
                         </div>
 
                         {/* Market Info */}
-                        <div className="flex items-center justify-between text-xs text-slate-500 dark:text-slate-400 pt-2 border-t border-slate-200 dark:border-slate-700">
+                        <div className="flex items-center justify-between text-xs text-gray-500 pt-2 border-t border-white/10">
                           <div className="flex items-center gap-1">
                             <Calendar className="w-3 h-3" />
                             <span>{new Date(market.resolutionDate).toLocaleDateString()}</span>
@@ -342,24 +370,24 @@ const MarketsPage = () => {
                       <div className="flex items-center gap-6">
                         <div className="flex-1">
                           <div className="flex items-center gap-2 mb-2">
-                            <Badge variant="outline" className="text-xs">
+                            <Badge className="text-xs bg-white/10 text-white border-white/20">
                               {market.category || 'General'}
                             </Badge>
-                            <Badge variant="outline" className={
+                            <Badge className={`text-xs ${
                               market.status === 'ACTIVE' 
-                                ? 'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-300'
-                                : 'bg-gray-100 text-gray-800'
-                            }>
+                                ? 'bg-green-500/20 text-green-300 border-green-500/30'
+                                : 'bg-gray-500/20 text-gray-300 border-gray-500/30'
+                            }`}>
                               {market.status}
                             </Badge>
                           </div>
-                          <h3 className="font-semibold text-lg group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors mb-2">
+                          <h3 className={`font-semibold text-lg text-white group-hover:text-blue-300 transition-colors mb-2 ${montserrat.className}`}>
                             {market.title}
                           </h3>
-                          <p className="text-slate-600 dark:text-slate-400 text-sm line-clamp-2 mb-3">
+                          <p className="text-gray-400 text-sm line-clamp-2 mb-3">
                             {market.description}
                           </p>
-                          <div className="flex items-center gap-4 text-xs text-slate-500 dark:text-slate-400">
+                          <div className="flex items-center gap-4 text-xs text-gray-500">
                             <div className="flex items-center gap-1">
                               <Calendar className="w-3 h-3" />
                               <span>{new Date(market.resolutionDate).toLocaleDateString()}</span>
@@ -375,15 +403,15 @@ const MarketsPage = () => {
 
                         {/* Prices */}
                         <div className="flex gap-3">
-                          <div className="bg-green-50 dark:bg-green-900/20 rounded-lg p-3 text-center border border-green-200 dark:border-green-800 min-w-[80px]">
-                            <p className="text-green-600 dark:text-green-400 text-xs font-semibold mb-1">YES</p>
-                            <p className="text-green-700 dark:text-green-300 font-bold">
+                          <div className="bg-green-500/20 rounded-lg p-3 text-center border border-green-500/30 min-w-[80px]">
+                            <p className="text-green-300 text-xs font-semibold mb-1">YES</p>
+                            <p className="text-green-200 font-bold">
                               ₹{Number(market.currentYesPrice || market.yesToken?.currentPrice || 1.0).toFixed(2)}
                             </p>
                           </div>
-                          <div className="bg-red-50 dark:bg-red-900/20 rounded-lg p-3 text-center border border-red-200 dark:border-red-800 min-w-[80px]">
-                            <p className="text-red-600 dark:text-red-400 text-xs font-semibold mb-1">NO</p>
-                            <p className="text-red-700 dark:text-red-300 font-bold">
+                          <div className="bg-red-500/20 rounded-lg p-3 text-center border border-red-500/30 min-w-[80px]">
+                            <p className="text-red-300 text-xs font-semibold mb-1">NO</p>
+                            <p className="text-red-200 font-bold">
                               ₹{Number(market.currentNoPrice || market.noToken?.currentPrice || 1.0).toFixed(2)}
                             </p>
                           </div>
@@ -399,12 +427,18 @@ const MarketsPage = () => {
 
         {/* Pagination */}
         {!isLoading && !error && pagination && pagination.totalPages > 1 && (
-          <div className="flex items-center justify-center gap-2 mt-12">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.6 }}
+            className="flex items-center justify-center gap-2 mt-12"
+          >
             <Button
               variant="outline"
               size="sm"
               onClick={() => setCurrentPage(prev => Math.max(1, prev - 1))}
               disabled={!pagination.hasPrev}
+              className="bg-white/5 border-white/15 text-white hover:bg-white/10 disabled:opacity-50"
             >
               Previous
             </Button>
@@ -428,7 +462,11 @@ const MarketsPage = () => {
                     variant={pageNum === currentPage ? "default" : "outline"}
                     size="sm"
                     onClick={() => setCurrentPage(pageNum)}
-                    className="w-8 h-8 p-0"
+                    className={`w-8 h-8 p-0 ${
+                      pageNum === currentPage
+                        ? 'bg-gradient-to-r from-blue-500 to-blue-700 text-white'
+                        : 'bg-white/5 border-white/15 text-white hover:bg-white/10'
+                    }`}
                   >
                     {pageNum}
                   </Button>
@@ -441,10 +479,11 @@ const MarketsPage = () => {
               size="sm"
               onClick={() => setCurrentPage(prev => Math.min(pagination.totalPages, prev + 1))}
               disabled={!pagination.hasNext}
+              className="bg-white/5 border-white/15 text-white hover:bg-white/10 disabled:opacity-50"
             >
               Next
             </Button>
-          </div>
+          </motion.div>
         )}
       </div>
     </div>

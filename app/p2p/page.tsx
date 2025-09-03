@@ -23,6 +23,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { Alert, AlertDescription } from '@/components/ui/alert'
 import { toast } from "sonner"
+import { montserrat } from '@/lib/fonts'
 import { 
   TrendingUp,
   TrendingDown,
@@ -37,7 +38,8 @@ import {
   AlertCircle,
   RefreshCw,
   Filter,
-  Search
+  Search,
+  Rocket
 } from 'lucide-react'
 
 const P2PPage = () => {
@@ -160,75 +162,78 @@ const P2PPage = () => {
 
   if (!isLoaded || !user) {
     return (
-      <div className="min-h-screen flex items-center justify-center">
-        <div className="animate-spin rounded-full h-32 w-32 border-b-2 border-blue-500"></div>
+      <div className="min-h-screen bg-gradient-to-br from-black via-zinc-900 to-purple-950/30 flex items-center justify-center">
+        <div className="animate-spin rounded-full h-32 w-32 border-b-2 border-white/30"></div>
       </div>
     )
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 to-slate-100 dark:from-slate-900 dark:to-slate-800">
+    <div className="min-h-screen bg-gradient-to-br from-black via-zinc-900 to-purple-950/30">
       <Navigation />
       
-      {/* Header */}
-      <motion.div
-        initial={{ opacity: 0, y: -20 }}
-        animate={{ opacity: 1, y: 0 }}
-        className="pt-20 pb-8 bg-white/80 dark:bg-slate-900/80 backdrop-blur-md border-b border-slate-200 dark:border-slate-700"
-      >
-        <div className="max-w-7xl mx-auto px-6">
-          <div className="text-center">
-            <h1 className="text-4xl font-bold text-slate-900 dark:text-white mb-4 flex items-center justify-center gap-3">
-              <ArrowUpDown className="w-10 h-10 text-blue-500" />
-              P2P Trading
-            </h1>
-            <p className="text-xl text-slate-600 dark:text-slate-400">
-              Trade tokens directly with other users at your preferred prices
-            </p>
-          </div>
-        </div>
-      </motion.div>
+      <div className="max-w-7xl mx-auto px-6 py-24">
+        {/* Header */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.8 }}
+          className="mb-12 text-center"
+        >
+          <h1 className={`text-4xl md:text-5xl font-bold text-white ${montserrat.className}`}>
+            P2P Trading
+            <div className="inline-block ml-4">
+              <ArrowUpDown className="w-12 h-12 text-white animate-pulse" />
+            </div>
+          </h1>
+          <p className="text-gray-400 mt-3 text-lg">
+            Trade tokens directly with other users at your preferred prices
+          </p>
+        </motion.div>
 
-      <div className="max-w-7xl mx-auto px-6 py-8">
         {/* Question Selection */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.2 }}
           className="mb-8"
         >
-          <Card>
+          <Card className="bg-white/5 backdrop-blur-sm border-white/15 rounded-2xl">
             <CardHeader>
-              <CardTitle className="flex items-center gap-2">
-                <Search className="w-5 h-5" />
+              <CardTitle className={`flex items-center gap-2 text-white ${montserrat.className}`}>
+                <div className="w-8 h-8 rounded-lg bg-gradient-to-r from-blue-400 to-blue-600 flex items-center justify-center">
+                  <Search className="w-4 h-4 text-white" />
+                </div>
                 Select a Market
               </CardTitle>
-              <CardDescription>
+              <CardDescription className="text-gray-400">
                 Choose a question to view its order book and start trading
               </CardDescription>
             </CardHeader>
             <CardContent className="space-y-4">
               <div>
-                <Label htmlFor="search">Search Questions</Label>
+                <Label htmlFor="search" className="text-white">Search Questions</Label>
                 <Input
                   id="search"
                   placeholder="Search for questions..."
                   value={searchTerm}
                   onChange={(e) => setSearchTerm(e.target.value)}
+                  className="bg-white/5 border-white/15 text-white placeholder:text-gray-400 focus:bg-white/10"
                 />
               </div>
               
               <div>
-                <Label htmlFor="question">Select Question</Label>
+                <Label htmlFor="question" className="text-white">Select Question</Label>
                 <Select value={selectedQuestion} onValueChange={setSelectedQuestion}>
-                  <SelectTrigger>
+                  <SelectTrigger className="bg-white/5 border-white/15 text-white">
                     <SelectValue placeholder="Choose a question to trade" />
                   </SelectTrigger>
-                  <SelectContent>
+                  <SelectContent className="bg-gray-900/95 backdrop-blur-lg border-white/20 text-white">
                     {filteredQuestions.map((question) => (
-                      <SelectItem key={question.id} value={question.id}>
+                      <SelectItem key={question.id} value={question.id} className="focus:bg-white/10">
                         <div className="flex flex-col">
                           <span className="font-medium">{question.title}</span>
-                          <span className="text-xs text-slate-500">
+                          <span className="text-xs text-gray-400">
                             YES: ₹{Number(question.currentYesPrice).toFixed(2)} | NO: ₹{Number(question.currentNoPrice).toFixed(2)}
                           </span>
                         </div>
@@ -239,9 +244,9 @@ const P2PPage = () => {
               </div>
 
               {selectedQuestionData && (
-                <Alert>
-                  <CheckCircle className="h-4 w-4" />
-                  <AlertDescription>
+                <Alert className="bg-green-500/10 border-green-500/30">
+                  <CheckCircle className="h-4 w-4 text-green-400" />
+                  <AlertDescription className="text-green-300">
                     Trading <strong>{selectedQuestionData.title}</strong> - 
                     Current YES: ₹{Number(selectedQuestionData.currentYesPrice).toFixed(2)}, 
                     NO: ₹{Number(selectedQuestionData.currentNoPrice).toFixed(2)}
@@ -258,12 +263,15 @@ const P2PPage = () => {
             <motion.div
               initial={{ opacity: 0, x: -20 }}
               animate={{ opacity: 1, x: 0 }}
+              transition={{ delay: 0.4 }}
               className="xl:col-span-2"
             >
-              <Card>
+              <Card className="bg-white/5 backdrop-blur-sm border-white/15 rounded-2xl">
                 <CardHeader className="flex flex-row items-center justify-between">
-                  <CardTitle className="flex items-center gap-2">
-                    <Users className="w-5 h-5" />
+                  <CardTitle className={`flex items-center gap-2 text-white ${montserrat.className}`}>
+                    <div className="w-8 h-8 rounded-lg bg-gradient-to-r from-purple-400 to-purple-600 flex items-center justify-center">
+                      <Users className="w-4 h-4 text-white" />
+                    </div>
                     Order Book
                   </CardTitle>
                   <Button
@@ -271,45 +279,57 @@ const P2PPage = () => {
                     size="sm"
                     onClick={() => refetchOrderBook()}
                     disabled={orderBookLoading}
+                    className="bg-white/5 border-white/15 text-white hover:bg-white/10"
                   >
                     <RefreshCw className={`w-4 h-4 ${orderBookLoading ? 'animate-spin' : ''}`} />
                   </Button>
                 </CardHeader>
                 <CardContent>
                   <Tabs defaultValue="YES">
-                    <TabsList className="grid w-full grid-cols-2">
-                      <TabsTrigger value="YES">YES Orders</TabsTrigger>
-                      <TabsTrigger value="NO">NO Orders</TabsTrigger>
+                    <TabsList className="flex justify-center bg-white/5 backdrop-blur-sm border border-white/15 rounded-xl p-1 grid w-full grid-cols-2">
+                      <TabsTrigger 
+                        value="YES" 
+                        className="px-6 py-3 text-white data-[state=active]:bg-gradient-to-r data-[state=active]:from-green-500 data-[state=active]:to-green-600 data-[state=active]:text-white rounded-lg"
+                      >
+                        YES Orders
+                      </TabsTrigger>
+                      <TabsTrigger 
+                        value="NO" 
+                        className="px-6 py-3 text-white data-[state=active]:bg-gradient-to-r data-[state=active]:from-red-500 data-[state=active]:to-red-600 data-[state=active]:text-white rounded-lg"
+                      >
+                        NO Orders
+                      </TabsTrigger>
                     </TabsList>
 
-                    <TabsContent value="YES" className="space-y-4">
+                    <TabsContent value="YES" className="space-y-4 mt-6">
                       <div className="grid md:grid-cols-2 gap-4">
                         {/* YES Buy Orders */}
                         <div>
-                          <h4 className="font-semibold text-green-600 mb-2 flex items-center gap-2">
+                          <h4 className={`font-semibold text-green-400 mb-2 flex items-center gap-2 ${montserrat.className}`}>
                             <TrendingUp className="w-4 h-4" />
                             Buy Orders
                           </h4>
                           {orderBookLoading ? (
                             <div className="space-y-2">
                               {Array.from({ length: 3 }).map((_, i) => (
-                                <Skeleton key={i} className="h-12 w-full" />
+                                <Skeleton key={i} className="h-12 w-full bg-white/20" />
                               ))}
                             </div>
                           ) : orderBook?.yesOrders.buys.length ? (
                             <div className="space-y-2">
                               {orderBook.yesOrders.buys.map((order: any) => (
-                                <div key={order.id} className="p-3 bg-green-50 dark:bg-green-900/20 rounded-lg">
+                                <div key={order.id} className="p-3 bg-green-500/20 rounded-lg border border-green-500/30">
                                   <div className="flex justify-between items-center">
                                     <div>
-                                      <p className="font-medium">₹{Number(order.pricePerToken).toFixed(2)}</p>
-                                      <p className="text-sm text-slate-600">{order.remainingQuantity} tokens</p>
+                                      <p className="font-medium text-white">₹{Number(order.pricePerToken).toFixed(2)}</p>
+                                      <p className="text-sm text-green-300">{order.remainingQuantity} tokens</p>
                                     </div>
                                     <Button
                                       size="sm"
                                       variant="outline"
                                       onClick={() => handleMatchOrder(order.id, order.remainingQuantity)}
                                       disabled={matchOrderLoading}
+                                      className="bg-white/5 border-white/15 text-white hover:bg-white/10"
                                     >
                                       Sell to
                                     </Button>
@@ -318,36 +338,37 @@ const P2PPage = () => {
                               ))}
                             </div>
                           ) : (
-                            <p className="text-slate-500 text-center py-4">No buy orders</p>
+                            <p className="text-gray-400 text-center py-4">No buy orders</p>
                           )}
                         </div>
 
                         {/* YES Sell Orders */}
                         <div>
-                          <h4 className="font-semibold text-red-600 mb-2 flex items-center gap-2">
+                          <h4 className={`font-semibold text-red-400 mb-2 flex items-center gap-2 ${montserrat.className}`}>
                             <TrendingDown className="w-4 h-4" />
                             Sell Orders
                           </h4>
                           {orderBookLoading ? (
                             <div className="space-y-2">
                               {Array.from({ length: 3 }).map((_, i) => (
-                                <Skeleton key={i} className="h-12 w-full" />
+                                <Skeleton key={i} className="h-12 w-full bg-white/20" />
                               ))}
                             </div>
                           ) : orderBook?.yesOrders.sells.length ? (
                             <div className="space-y-2">
                               {orderBook.yesOrders.sells.map((order: any) => (
-                                <div key={order.id} className="p-3 bg-red-50 dark:bg-red-900/20 rounded-lg">
+                                <div key={order.id} className="p-3 bg-red-500/20 rounded-lg border border-red-500/30">
                                   <div className="flex justify-between items-center">
                                     <div>
-                                      <p className="font-medium">₹{Number(order.pricePerToken).toFixed(2)}</p>
-                                      <p className="text-sm text-slate-600">{order.remainingQuantity} tokens</p>
+                                      <p className="font-medium text-white">₹{Number(order.pricePerToken).toFixed(2)}</p>
+                                      <p className="text-sm text-red-300">{order.remainingQuantity} tokens</p>
                                     </div>
                                     <Button
                                       size="sm"
                                       variant="outline"
                                       onClick={() => handleMatchOrder(order.id, order.remainingQuantity)}
                                       disabled={matchOrderLoading}
+                                      className="bg-white/5 border-white/15 text-white hover:bg-white/10"
                                     >
                                       Buy from
                                     </Button>
@@ -356,40 +377,41 @@ const P2PPage = () => {
                               ))}
                             </div>
                           ) : (
-                            <p className="text-slate-500 text-center py-4">No sell orders</p>
+                            <p className="text-gray-400 text-center py-4">No sell orders</p>
                           )}
                         </div>
                       </div>
                     </TabsContent>
 
-                    <TabsContent value="NO" className="space-y-4">
+                    <TabsContent value="NO" className="space-y-4 mt-6">
                       <div className="grid md:grid-cols-2 gap-4">
                         {/* NO Buy Orders */}
                         <div>
-                          <h4 className="font-semibold text-green-600 mb-2 flex items-center gap-2">
+                          <h4 className={`font-semibold text-green-400 mb-2 flex items-center gap-2 ${montserrat.className}`}>
                             <TrendingUp className="w-4 h-4" />
                             Buy Orders
                           </h4>
                           {orderBookLoading ? (
                             <div className="space-y-2">
                               {Array.from({ length: 3 }).map((_, i) => (
-                                <Skeleton key={i} className="h-12 w-full" />
+                                <Skeleton key={i} className="h-12 w-full bg-white/20" />
                               ))}
                             </div>
                           ) : orderBook?.noOrders.buys.length ? (
                             <div className="space-y-2">
                               {orderBook.noOrders.buys.map((order: any) => (
-                                <div key={order.id} className="p-3 bg-green-50 dark:bg-green-900/20 rounded-lg">
+                                <div key={order.id} className="p-3 bg-green-500/20 rounded-lg border border-green-500/30">
                                   <div className="flex justify-between items-center">
                                     <div>
-                                      <p className="font-medium">₹{Number(order.pricePerToken).toFixed(2)}</p>
-                                      <p className="text-sm text-slate-600">{order.remainingQuantity} tokens</p>
+                                      <p className="font-medium text-white">₹{Number(order.pricePerToken).toFixed(2)}</p>
+                                      <p className="text-sm text-green-300">{order.remainingQuantity} tokens</p>
                                     </div>
                                     <Button
                                       size="sm"
                                       variant="outline"
                                       onClick={() => handleMatchOrder(order.id, order.remainingQuantity)}
                                       disabled={matchOrderLoading}
+                                      className="bg-white/5 border-white/15 text-white hover:bg-white/10"
                                     >
                                       Sell to
                                     </Button>
@@ -398,36 +420,37 @@ const P2PPage = () => {
                               ))}
                             </div>
                           ) : (
-                            <p className="text-slate-500 text-center py-4">No buy orders</p>
+                            <p className="text-gray-400 text-center py-4">No buy orders</p>
                           )}
                         </div>
 
                         {/* NO Sell Orders */}
                         <div>
-                          <h4 className="font-semibold text-red-600 mb-2 flex items-center gap-2">
+                          <h4 className={`font-semibold text-red-400 mb-2 flex items-center gap-2 ${montserrat.className}`}>
                             <TrendingDown className="w-4 h-4" />
                             Sell Orders
                           </h4>
                           {orderBookLoading ? (
                             <div className="space-y-2">
                               {Array.from({ length: 3 }).map((_, i) => (
-                                <Skeleton key={i} className="h-12 w-full" />
+                                <Skeleton key={i} className="h-12 w-full bg-white/20" />
                               ))}
                             </div>
                           ) : orderBook?.noOrders.sells.length ? (
                             <div className="space-y-2">
                               {orderBook.noOrders.sells.map((order: any) => (
-                                <div key={order.id} className="p-3 bg-red-50 dark:bg-red-900/20 rounded-lg">
+                                <div key={order.id} className="p-3 bg-red-500/20 rounded-lg border border-red-500/30">
                                   <div className="flex justify-between items-center">
                                     <div>
-                                      <p className="font-medium">₹{Number(order.pricePerToken).toFixed(2)}</p>
-                                      <p className="text-sm text-slate-600">{order.remainingQuantity} tokens</p>
+                                      <p className="font-medium text-white">₹{Number(order.pricePerToken).toFixed(2)}</p>
+                                      <p className="text-sm text-red-300">{order.remainingQuantity} tokens</p>
                                     </div>
                                     <Button
                                       size="sm"
                                       variant="outline"
                                       onClick={() => handleMatchOrder(order.id, order.remainingQuantity)}
                                       disabled={matchOrderLoading}
+                                      className="bg-white/5 border-white/15 text-white hover:bg-white/10"
                                     >
                                       Buy from
                                     </Button>
@@ -436,7 +459,7 @@ const P2PPage = () => {
                               ))}
                             </div>
                           ) : (
-                            <p className="text-slate-500 text-center py-4">No sell orders</p>
+                            <p className="text-gray-400 text-center py-4">No sell orders</p>
                           )}
                         </div>
                       </div>
@@ -450,48 +473,51 @@ const P2PPage = () => {
             <motion.div
               initial={{ opacity: 0, x: 20 }}
               animate={{ opacity: 1, x: 0 }}
+              transition={{ delay: 0.6 }}
               className="space-y-6"
             >
               {/* Create Order Form */}
-              <Card>
+              <Card className="bg-white/5 backdrop-blur-sm border-white/15 rounded-2xl">
                 <CardHeader>
-                  <CardTitle className="flex items-center gap-2">
-                    <Plus className="w-5 h-5" />
+                  <CardTitle className={`flex items-center gap-2 text-white ${montserrat.className}`}>
+                    <div className="w-8 h-8 rounded-lg bg-gradient-to-r from-emerald-400 to-green-600 flex items-center justify-center">
+                      <Plus className="w-4 h-4 text-white" />
+                    </div>
                     Create Order
                   </CardTitle>
-                  <CardDescription>
+                  <CardDescription className="text-gray-400">
                     Place a buy or sell order at your preferred price
                   </CardDescription>
                 </CardHeader>
                 <CardContent className="space-y-4">
                   <div>
-                    <Label>Order Type</Label>
+                    <Label className="text-white">Order Type</Label>
                     <Select value={orderType} onValueChange={(value) => setOrderType(value as 'BUY' | 'SELL')}>
-                      <SelectTrigger>
+                      <SelectTrigger className="bg-white/5 border-white/15 text-white">
                         <SelectValue />
                       </SelectTrigger>
-                      <SelectContent>
-                        <SelectItem value="BUY">Buy Order</SelectItem>
-                        <SelectItem value="SELL">Sell Order</SelectItem>
+                      <SelectContent className="bg-gray-900/95 backdrop-blur-lg border-white/20 text-white">
+                        <SelectItem value="BUY" className="focus:bg-white/10">Buy Order</SelectItem>
+                        <SelectItem value="SELL" className="focus:bg-white/10">Sell Order</SelectItem>
                       </SelectContent>
                     </Select>
                   </div>
 
                   <div>
-                    <Label>Token Type</Label>
+                    <Label className="text-white">Token Type</Label>
                     <Select value={selectedTokenType} onValueChange={(value) => setSelectedTokenType(value as 'YES' | 'NO')}>
-                      <SelectTrigger>
+                      <SelectTrigger className="bg-white/5 border-white/15 text-white">
                         <SelectValue />
                       </SelectTrigger>
-                      <SelectContent>
-                        <SelectItem value="YES">YES Tokens</SelectItem>
-                        <SelectItem value="NO">NO Tokens</SelectItem>
+                      <SelectContent className="bg-gray-900/95 backdrop-blur-lg border-white/20 text-white">
+                        <SelectItem value="YES" className="focus:bg-white/10">YES Tokens</SelectItem>
+                        <SelectItem value="NO" className="focus:bg-white/10">NO Tokens</SelectItem>
                       </SelectContent>
                     </Select>
                   </div>
 
                   <div>
-                    <Label htmlFor="quantity">Quantity</Label>
+                    <Label htmlFor="quantity" className="text-white">Quantity</Label>
                     <Input
                       id="quantity"
                       type="number"
@@ -499,11 +525,12 @@ const P2PPage = () => {
                       value={quantity}
                       onChange={(e) => setQuantity(e.target.value)}
                       min="1"
+                      className="bg-white/5 border-white/15 text-white placeholder:text-gray-400 focus:bg-white/10"
                     />
                   </div>
 
                   <div>
-                    <Label htmlFor="price">Price per Token (₹)</Label>
+                    <Label htmlFor="price" className="text-white">Price per Token (₹)</Label>
                     <Input
                       id="price"
                       type="number"
@@ -512,12 +539,13 @@ const P2PPage = () => {
                       value={pricePerToken}
                       onChange={(e) => setPricePerToken(e.target.value)}
                       min="0.01"
+                      className="bg-white/5 border-white/15 text-white placeholder:text-gray-400 focus:bg-white/10"
                     />
                   </div>
 
                   {quantity && pricePerToken && (
-                    <div className="p-3 bg-blue-50 dark:bg-blue-900/20 rounded-lg">
-                      <p className="text-sm font-medium">
+                    <div className="p-3 bg-blue-500/20 rounded-lg border border-blue-500/30">
+                      <p className={`text-sm font-medium text-white ${montserrat.className}`}>
                         Total: ₹{Number(parseInt(quantity || '0') * parseFloat(pricePerToken || '0')).toFixed(2)}
                       </p>
                     </div>
@@ -526,7 +554,7 @@ const P2PPage = () => {
                   <Button
                     onClick={handleCreateOrder}
                     disabled={!quantity || !pricePerToken || createOrderLoading}
-                    className="w-full"
+                    className="w-full bg-gradient-to-r from-emerald-500 to-green-600 hover:from-emerald-600 hover:to-green-700 text-white"
                     size="lg"
                   >
                     {createOrderLoading ? (
@@ -545,10 +573,12 @@ const P2PPage = () => {
               </Card>
 
               {/* My Orders */}
-              <Card>
+              <Card className="bg-white/5 backdrop-blur-sm border-white/15 rounded-2xl">
                 <CardHeader className="flex flex-row items-center justify-between">
-                  <CardTitle className="flex items-center gap-2">
-                    <Clock className="w-5 h-5" />
+                  <CardTitle className={`flex items-center gap-2 text-white ${montserrat.className}`}>
+                    <div className="w-8 h-8 rounded-lg bg-gradient-to-r from-orange-400 to-orange-600 flex items-center justify-center">
+                      <Clock className="w-4 h-4 text-white" />
+                    </div>
                     My Orders
                   </CardTitle>
                   <Button
@@ -556,6 +586,7 @@ const P2PPage = () => {
                     size="sm"
                     onClick={() => refetchUserOrders()}
                     disabled={userOrdersLoading}
+                    className="bg-white/5 border-white/15 text-white hover:bg-white/10"
                   >
                     <RefreshCw className={`w-4 h-4 ${userOrdersLoading ? 'animate-spin' : ''}`} />
                   </Button>
@@ -564,36 +595,34 @@ const P2PPage = () => {
                   {userOrdersLoading ? (
                     <div className="space-y-3">
                       {Array.from({ length: 3 }).map((_, i) => (
-                        <Skeleton key={i} className="h-16 w-full" />
+                        <Skeleton key={i} className="h-16 w-full bg-white/20" />
                       ))}
                     </div>
                   ) : userOrders.length ? (
                     <div className="space-y-3">
                       {userOrders.map((order: any) => (
-                        <div key={order.id} className="p-3 border rounded-lg">
+                        <div key={order.id} className="p-3 bg-white/5 backdrop-blur-sm border border-white/15 rounded-lg">
                           <div className="flex justify-between items-start">
                             <div>
                               <div className="flex items-center gap-2 mb-1">
-                                <Badge variant={order.orderType === 'BUY' ? 'default' : 'secondary'}>
+                                <Badge className={order.orderType === 'BUY' ? 'bg-green-500/20 text-green-300 border-green-500/30' : 'bg-red-500/20 text-red-300 border-red-500/30'}>
                                   {order.orderType}
                                 </Badge>
-                                <Badge variant="outline">
+                                <Badge className="bg-white/10 text-white border-white/20">
                                   {order.tokenType}
                                 </Badge>
-                                <Badge 
-                                  variant={
-                                    order.status === 'PENDING' ? 'default' :
-                                    order.status === 'FILLED' ? 'default' :
-                                    order.status === 'CANCELLED' ? 'destructive' : 'secondary'
-                                  }
-                                >
+                                <Badge className={
+                                  order.status === 'PENDING' ? 'bg-yellow-500/20 text-yellow-300 border-yellow-500/30' :
+                                  order.status === 'FILLED' ? 'bg-green-500/20 text-green-300 border-green-500/30' :
+                                  order.status === 'CANCELLED' ? 'bg-red-500/20 text-red-300 border-red-500/30' : 'bg-gray-500/20 text-gray-300 border-gray-500/30'
+                                }>
                                   {order.status}
                                 </Badge>
                               </div>
-                              <p className="text-sm font-medium">
+                              <p className={`text-sm font-medium text-white ${montserrat.className}`}>
                                 {order.remainingQuantity}/{order.quantity} @ ₹{Number(order.pricePerToken).toFixed(2)}
                               </p>
-                              <p className="text-xs text-slate-500">
+                              <p className="text-xs text-gray-400">
                                 {order.question?.title}
                               </p>
                             </div>
@@ -603,6 +632,7 @@ const P2PPage = () => {
                                 size="sm"
                                 onClick={() => handleCancelOrder(order.id)}
                                 disabled={cancelOrderLoading}
+                                className="bg-white/5 border-white/15 text-white hover:bg-white/10"
                               >
                                 <XCircle className="w-3 h-3" />
                               </Button>
@@ -613,9 +643,9 @@ const P2PPage = () => {
                     </div>
                   ) : (
                     <div className="text-center py-6">
-                      <Clock className="w-12 h-12 text-slate-400 mx-auto mb-2" />
-                      <p className="text-slate-500">No orders yet</p>
-                      <p className="text-xs text-slate-400">Create your first order above</p>
+                      <Clock className="w-12 h-12 text-gray-400 mx-auto mb-2" />
+                      <p className="text-gray-400">No orders yet</p>
+                      <p className="text-xs text-gray-500">Create your first order above</p>
                     </div>
                   )}
                 </CardContent>
@@ -628,13 +658,14 @@ const P2PPage = () => {
           <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
+            transition={{ delay: 0.4 }}
             className="text-center py-12"
           >
-            <ArrowUpDown className="w-24 h-24 text-slate-400 mx-auto mb-4" />
-            <h3 className="text-2xl font-semibold text-slate-900 dark:text-white mb-2">
+            <ArrowUpDown className="w-24 h-24 text-gray-400 mx-auto mb-4" />
+            <h3 className={`text-2xl font-semibold text-white mb-2 ${montserrat.className}`}>
               Select a Market to Start Trading
             </h3>
-            <p className="text-slate-600 dark:text-slate-400">
+            <p className="text-gray-400">
               Choose a question from the dropdown above to view its order book and start P2P trading
             </p>
           </motion.div>
