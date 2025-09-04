@@ -45,6 +45,7 @@ const Navigation = () => {
     { href: '/dashboard', label: 'Dashboard', icon: BarChart3, protected: true },
     { href: '/markets', label: 'Markets', icon: TrendingUp },
     { href: '/wallet', label: 'Wallet', icon: Wallet, protected: true },
+    {href: '/p2p', label: 'P2P', icon: Target, protected: true}
   ]
 
   const visibleNavItems = navItems.filter(item => !item.protected || isSignedIn)
